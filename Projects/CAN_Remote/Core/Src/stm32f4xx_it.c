@@ -27,6 +27,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
+#include "iwdg.h"
 #include "robo_base.h"
 #include "math.h"
 #include "Remote.h"
@@ -57,6 +58,7 @@ extern Pos_System pos;
 int16_t Error;
 uint8_t a[18];
 int16_t speed_data;
+int16_t mode;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -237,18 +239,18 @@ void CAN1_RX0_IRQHandler(void)
     else if (Error > 4096)speed.Info.Abs_Angle -= 8192;
   }speed.Info.Last_Angle=speed.Info.Angle;
 
-//	pos.Info.Angle=RxData[0];pos.Info.Angle<<=8;pos.Info.Angle|=RxData[1];
-//	pos.Info.Speed=RxData[2];pos.Info.Speed<<=8;pos.Info.Speed|=RxData[3];
-//	pos.Info.Current=RxData[4];pos.Info.Current<<=8;pos.Info.Current|=RxData[5];
-//	pos.Info.Temperature=RxData[6];
-//  if(pos.Info.Speed!=0){
-//		Error=pos.Info.Angle-pos.Info.Last_Angle;
-//		pos.Info.Abs_Angle+=Error;
-//		if (Error < -4096)pos.Info.Abs_Angle += 8192;
-//    else if (Error > 4096)pos.Info.Abs_Angle -= 8192;
-//	}pos.Info.Last_Angle=pos.Info.Angle;
-//		speed.Tar_Speed=33.3;
-//		PID_Speed_Cal(&speed,TxData);
+	pos.Info.Angle=RxData[0];pos.Info.Angle<<=8;pos.Info.Angle|=RxData[1];
+	pos.Info.Speed=RxData[2];pos.Info.Speed<<=8;pos.Info.Speed|=RxData[3];
+	pos.Info.Current=RxData[4];pos.Info.Current<<=8;pos.Info.Current|=RxData[5];
+	pos.Info.Temperature=RxData[6];
+  if(pos.Info.Speed!=0){
+		Error=pos.Info.Angle-pos.Info.Last_Angle;
+		pos.Info.Abs_Angle+=Error;
+		if (Error < -4096)pos.Info.Abs_Angle += 8192;
+    else if (Error > 4096)pos.Info.Abs_Angle -= 8192;
+	}pos.Info.Last_Angle=pos.Info.Angle;
+		speed.Tar_Speed=33.3;
+		PID_Speed_Cal(&speed,TxData);
 
   /* USER CODE END CAN1_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
@@ -264,17 +266,21 @@ void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
-	speed.Tar_Speed=(speed_data-1024)*5;
-  //speed.Tar_Speed=1000;
-	//pos.Tar_Pos=9000000;
-	PID_Speed_Cal(&speed,TxData);
-	//PID_Pos_Cal(&pos,TxData);
+	if(mode==1){
+		speed.Tar_Speed=(speed_data-1024)*5;
+		PID_Speed_Cal(&speed,TxData);
+	}
+	else if(mode==1){
+		pos.Tar_Pos=(speed_data-1024)*5;
+		PID_Pos_Cal(&pos,TxData);
+	}
 	Send_To_Motor(&hcan1,TxData);
+	HAL_IWDG_Refresh(&hiwdg);
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
 	
-  /* USER CODE END TIM2_IRQn 1 */ 
+  /* USER CODE END TIM2_IRQn 1 */
 }
 
 /**
@@ -284,8 +290,6 @@ void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_0,GPIO_PIN_SET);
-	Uart_DMA_Process(&huart1,&hdma_usart1_rx,&Uart1_Rx,RemoteDataProcess);  /* USER CODE END USART1_IRQn 0 */
-  __HAL_UART_ENABLE_IT(&huart1,UART_IT_IDLE);
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */

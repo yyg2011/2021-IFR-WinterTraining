@@ -4,6 +4,8 @@
 UART_RX_BUFFER Uart1_Rx;
 extern UART_HandleTypeDef huart1;
 extern int16_t speed_data;
+extern int16_t mode;
+
 RC_Ctl_t RC_CtrlData=
 {
 	{1024,1024,1024,1024,2,2},
@@ -39,6 +41,7 @@ void RemoteDataProcess(uint8_t *pData)
 	RC_CtrlData.update = 1;	
 
 	speed_data=RC_CtrlData.rc.ch1;
+	mode=RC_CtrlData.rc.s1;
 }
 
 void Uart_DMA_Process(UART_HandleTypeDef *huart,DMA_HandleTypeDef* hdma_usart_rx,UART_RX_BUFFER* Uart_Rx,void(*DataProcessFunc)(uint8_t *pData))
