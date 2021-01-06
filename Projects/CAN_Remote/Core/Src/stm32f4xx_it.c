@@ -270,7 +270,7 @@ void TIM2_IRQHandler(void)
 		speed.Tar_Speed=(speed_data-1024)*5;
 		PID_Speed_Cal(&speed,TxData);
 	}
-	else if(mode==1){
+	else if(mode==3){
 		pos.Tar_Pos=(speed_data-1024)*5;
 		PID_Pos_Cal(&pos,TxData);
 	}
