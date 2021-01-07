@@ -16,7 +16,7 @@
 
 //---------变量声明部分-----------//
 ROBO_BASE Robo_Base;
-CAN_HandleTypeDef hcan2;
+CAN_HandleTypeDef Can_HandleTypeDef;
 //--------------------------------//
 
 //---------外部变量声明部分-------//
@@ -144,7 +144,7 @@ void PID_Send(ROBO_BASE* Robo)
   P_Pos=&Robo->Pos_MotorRB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
   P_Pos=&Robo->Pos_MotorLF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
   P_Pos=&Robo->Pos_MotorRF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-  Send_To_Motor(&hcan2,Robo->Tx_CAN2);
+  Send_To_Motor(&Can_HandleTypeDef,Robo->Tx_CAN2);
 
   Speed_System* P_Speed=NULL;
   P_Speed=&Robo->Speed_MotorLB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
@@ -463,9 +463,9 @@ void PID_Pos_Cal(Pos_System* Pos_Motor,uint8_t *Tx_msg)
 	if(Pos_Motor->Speed_PID.output < -Pos_Motor->Speed_PID.output_max)
 		Pos_Motor->Speed_PID.output = -Pos_Motor->Speed_PID.output_max;
 	
-	Pos_Motor->Motor_Num=2;
+//	Pos_Motor->Motor_Num=2;
 
-	
+//	
 	Tx_msg[Pos_Motor->Motor_Num*2]=((int16_t)Pos_Motor->Speed_PID.output)>>8;Tx_msg[Pos_Motor->Motor_Num*2+1]=(int16_t)Pos_Motor->Speed_PID.output;
 }
 
@@ -510,7 +510,7 @@ void PID_Speed_Cal(Speed_System* Speed_Motor,uint8_t *Tx_msg)
 	if(Speed_Motor->Speed_PID.output < -Speed_Motor->Speed_PID.output_max)
 		Speed_Motor->Speed_PID.output = -Speed_Motor->Speed_PID.output_max;
 	
-	Speed_Motor->Motor_Num=2;
+//	Speed_Motor->Motor_Num=2;
 	
 	Tx_msg[Speed_Motor->Motor_Num*2] = ((int16_t)Speed_Motor->Speed_PID.output)>>8;
 	Tx_msg[Speed_Motor->Motor_Num*2+1] = (int16_t)Speed_Motor->Speed_PID.output;

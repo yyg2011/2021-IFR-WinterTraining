@@ -51,15 +51,19 @@
 /* USER CODE BEGIN PV */
 CAN_TxHeaderTypeDef TxMessage;
 CAN_RxHeaderTypeDef RxMessage;
-uint8_t RxData[8];
-uint8_t TxData[8];
+//uint8_t RxData[8];
+//uint8_t TxData[8];
 uint8_t BUF[8]={1,2,3,4,5,6,7,8};
 uint32_t Txmailbox;
-
 PID pid1;
 Speed_System speed;
 Pos_System pos;
 RC_Ctl_t RC_Data;
+extern ROBO_BASE Robo_Base;
+extern	uint8_t Tx_CAN2[8];				//CAN2通信发送数据
+extern	uint8_t Tx_CAN1[8];				//CAN1通信发送数据
+extern	uint8_t Rx_CAN2[8];				//CAN2通信接收数据
+extern	uint8_t Rx_CAN1[8];				//CAN1通信接收数据
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,13 +110,15 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   MX_IWDG_Init();
+  MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
 	MX_IWDG_Init();
 	__HAL_UART_ENABLE_IT(&huart1,UART_IT_IDLE);
 	HAL_TIM_Base_Start_IT(&htim2);
 	CAN_FilterConfig();
-	PID_Init(&speed.Speed_PID,5,0,0,5000,0,5000,5000);
-	PID_Init(&pos.Pos_PID,5,0,0,5000,0,5000,5000);
+	BASE_Init(&Robo_Base);
+//	PID_Init(&speed.Speed_PID,5,0,0,5000,0,5000,5000);
+//	PID_Init(&pos.Pos_PID,5,0,0,5000,0,5000,5000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -172,7 +178,46 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
+{
+	Motor->Angle=RxData[0];Motor->Angle<<=8;Motor->Angle|=RxData[1];
+	Motor->Speed=RxData[2];Motor->Speed<<=8;Motor->Speed|=RxData[3];
+	Motor->Current=RxData[4];Motor->Current<<=8;Motor->Current|=RxData[5];
+	Motor->Temperature=RxData[6];
+  if(Motor->Speed!=0){
+		Motor->Error=Motor->Angle-Motor->Last_Angle;
+		Motor->Abs_Angle+=Motor->Error;
+		if (Motor->Error < -4096)Motor->Abs_Angle += 8192;
+    else if (Motor->Error > 4096)Motor->Abs_Angle -= 8192;
+  }Motor->Last_Angle=Motor->Angle;
 
+//	pos.Info.Angle=RxData[0];pos.Info.Angle<<=8;pos.Info.Angle|=RxData[1];
+//	pos.Info.Speed=RxData[2];pos.Info.Speed<<=8;pos.Info.Speed|=RxData[3];
+//	pos.Info.Current=RxData[4];pos.Info.Current<<=8;pos.Info.Current|=RxData[5];
+//	pos.Info.Temperature=RxData[6];
+//  if(pos.Info.Speed!=0){
+//		Error=pos.Info.Angle-pos.Info.Last_Angle;
+//		pos.Info.Abs_Angle+=Error;
+//		if (Error < -4096)pos.Info.Abs_Angle += 8192;
+//    else if (Error > 4096)pos.Info.Abs_Angle -= 8192;
+//	}pos.Info.Last_Angle=pos.Info.Angle;
+//		speed.Tar_Speed=33.3;
+//		PID_Speed_Cal(&speed,TxData);
+
+}
+
+void Motor_control_process(Motor* Robo,uint8_t* RxData,uint8_t* TxData)
+{
+	
+}
+
+void Motor_num_converter(uint8_t Motor_num,ROBO_BASE* Robo)
+{
+	if (Motor_num==1) Motor_control_process(Robo->MotorLF,Rx_CAN1,Tx_CAN1);
+	else if(Motor_num==2) Motor_control_process(Robo->MotorRF,Rx_CAN1,Tx_CAN1);
+	else if(Motor_num==3) Motor_control_process(Robo->MotorRB,Rx_CAN2,Tx_CAN1);
+	else if(Motor_num==4) Motor_control_process(Robo->MotorLB,Rx_CAN2,Tx_CAN1);
+}
 /* USER CODE END 4 */
 
 /**

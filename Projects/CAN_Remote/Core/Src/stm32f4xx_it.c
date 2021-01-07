@@ -249,7 +249,7 @@ void CAN1_RX0_IRQHandler(void)
 		if (Error < -4096)pos.Info.Abs_Angle += 8192;
     else if (Error > 4096)pos.Info.Abs_Angle -= 8192;
 	}pos.Info.Last_Angle=pos.Info.Angle;
-		speed.Tar_Speed=33.3;
+//		speed.Tar_Speed=33.3;
 		PID_Speed_Cal(&speed,TxData);
 
   /* USER CODE END CAN1_RX0_IRQn 0 */

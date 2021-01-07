@@ -48,14 +48,15 @@
 Motor dianji;
 extern CAN_TxHeaderTypeDef TxMessage;
 extern CAN_RxHeaderTypeDef RxMessage;
-extern uint8_t RxData[8];
-extern uint8_t TxData[8];
+//extern uint8_t RxData[8];
+//extern uint8_t TxData[8];
 extern uint8_t BUF[8];
 extern uint32_t Txmailbox;
 extern Speed_System speed;
 extern Pos_System pos;
+extern ROBO_BASE Robo_Base;
 //RC_Ctl_t RC_Data;
-int16_t Error;
+
 uint8_t a[18];
 int16_t speed_data;
 int16_t mode;
@@ -73,6 +74,7 @@ int16_t mode;
 
 /* External variables --------------------------------------------------------*/
 extern CAN_HandleTypeDef hcan1;
+extern CAN_HandleTypeDef hcan2;
 extern TIM_HandleTypeDef htim2;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern UART_HandleTypeDef huart1;
@@ -224,39 +226,33 @@ void SysTick_Handler(void)
 void CAN1_RX0_IRQHandler(void)
 {
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
-	if(HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO0,&RxMessage,RxData)==HAL_OK)
+	if(HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO0,&RxMessage,Robo_Base.Rx_CAN1)==HAL_OK)
 	{
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
 	}
-	speed.Info.Angle=RxData[0];speed.Info.Angle<<=8;speed.Info.Angle|=RxData[1];
-	speed.Info.Speed=RxData[2];speed.Info.Speed<<=8;speed.Info.Speed|=RxData[3];
-	speed.Info.Current=RxData[4];speed.Info.Current<<=8;speed.Info.Current|=RxData[5];
-	speed.Info.Temperature=RxData[6];
-  if(speed.Info.Speed!=0){
-		Error=speed.Info.Angle-speed.Info.Last_Angle;
-		speed.Info.Abs_Angle+=Error;
-		if (Error < -4096)speed.Info.Abs_Angle += 8192;
-    else if (Error > 4096)speed.Info.Abs_Angle -= 8192;
-  }speed.Info.Last_Angle=speed.Info.Angle;
-
-	pos.Info.Angle=RxData[0];pos.Info.Angle<<=8;pos.Info.Angle|=RxData[1];
-	pos.Info.Speed=RxData[2];pos.Info.Speed<<=8;pos.Info.Speed|=RxData[3];
-	pos.Info.Current=RxData[4];pos.Info.Current<<=8;pos.Info.Current|=RxData[5];
-	pos.Info.Temperature=RxData[6];
-  if(pos.Info.Speed!=0){
-		Error=pos.Info.Angle-pos.Info.Last_Angle;
-		pos.Info.Abs_Angle+=Error;
-		if (Error < -4096)pos.Info.Abs_Angle += 8192;
-    else if (Error > 4096)pos.Info.Abs_Angle -= 8192;
-	}pos.Info.Last_Angle=pos.Info.Angle;
-		speed.Tar_Speed=33.3;
-		PID_Speed_Cal(&speed,TxData);
 
   /* USER CODE END CAN1_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
 	
   /* USER CODE END CAN1_RX0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles CAN1 RX1 interrupt.
+  */
+void CAN1_RX1_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN1_RX1_IRQn 0 */
+	if(HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO1,&RxMessage,Robo_Base.Rx_CAN1)==HAL_OK)
+	{
+		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
+	}
+  /* USER CODE END CAN1_RX1_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX1_IRQn 1 */
+
+  /* USER CODE END CAN1_RX1_IRQn 1 */
 }
 
 /**
@@ -309,6 +305,40 @@ void DMA2_Stream2_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
 
   /* USER CODE END DMA2_Stream2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles CAN2 RX0 interrupts.
+  */
+void CAN2_RX0_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN2_RX0_IRQn 0 */
+	if(HAL_CAN_GetRxMessage(&hcan2,CAN_RX_FIFO0,&RxMessage,Robo_Base.Rx_CAN2)==HAL_OK)
+	{
+		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
+	}
+  /* USER CODE END CAN2_RX0_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan2);
+  /* USER CODE BEGIN CAN2_RX0_IRQn 1 */
+
+  /* USER CODE END CAN2_RX0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles CAN2 RX1 interrupt.
+  */
+void CAN2_RX1_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN2_RX1_IRQn 0 */
+	if(HAL_CAN_GetRxMessage(&hcan2,CAN_RX_FIFO1,&RxMessage,Robo_Base.Rx_CAN2)==HAL_OK)
+	{
+		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
+	}
+  /* USER CODE END CAN2_RX1_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan2);
+  /* USER CODE BEGIN CAN2_RX1_IRQn 1 */
+
+  /* USER CODE END CAN2_RX1_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

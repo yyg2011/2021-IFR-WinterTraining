@@ -23,6 +23,7 @@ typedef struct Motor
 	int16_t Speed;
 	int16_t Current;
 	uint8_t Temperature;
+	int16_t Error;
 	uint16_t Last_Angle;
 	int32_t Abs_Angle;
 }Motor;
@@ -94,6 +95,11 @@ typedef struct Robo_Base			//底盘结构体
 	Speed_System Speed_MotorLB;		//速度环--左后轮
 	Speed_System Speed_MotorRF;		//速度环--右前轮
 	Speed_System Speed_MotorRB;		//速度环--右后轮
+
+	Motor MotorLF;		
+	Motor MotorLB;		
+	Motor MotorRF;		
+	Motor MotorRB;		
 
 	int Speed_X;					//底盘X方向上目标速度
 	int Speed_Y;					//底盘Y方向上目标速度
