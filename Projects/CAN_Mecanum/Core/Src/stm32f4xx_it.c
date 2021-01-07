@@ -58,7 +58,8 @@ extern ROBO_BASE Robo_Base;
 //RC_Ctl_t RC_Data;
 
 uint8_t a[18];
-int16_t speed_data;
+int16_t speed_data_ch0;
+int16_t speed_data_ch1;
 int16_t mode;
 /* USER CODE END PV */
 

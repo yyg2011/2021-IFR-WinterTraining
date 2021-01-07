@@ -3,7 +3,8 @@
 
 UART_RX_BUFFER Uart1_Rx;
 extern UART_HandleTypeDef huart1;
-extern int16_t speed_data;
+extern int16_t speed_data_ch0;
+extern int16_t speed_data_ch1;
 extern int16_t mode;
 
 RC_Ctl_t RC_CtrlData=
@@ -40,7 +41,8 @@ void RemoteDataProcess(uint8_t *pData)
 	
 	RC_CtrlData.update = 1;	
 
-	speed_data=RC_CtrlData.rc.ch1;
+	speed_data_ch0=RC_CtrlData.rc.ch0;
+	speed_data_ch1=RC_CtrlData.rc.ch1;
 	mode=RC_CtrlData.rc.s1;
 }
 

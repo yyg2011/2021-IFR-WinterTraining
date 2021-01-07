@@ -54,7 +54,10 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void Remote_to_speed(uint8_t Motor_num,uint8_t ch0,uint8_t ch1);
+void Motor_Info_Handle(Motor* Motor,uint8_t* RxData);
+void Motor_control_process(Motor* Motor,uint8_t speed,uint8_t* RxData,uint8_t* TxData);
+void Motor_num_converter(uint8_t Motor_num,uint8_t speed,ROBO_BASE* Robo);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

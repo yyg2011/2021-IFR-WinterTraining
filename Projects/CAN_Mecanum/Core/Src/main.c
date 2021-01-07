@@ -117,8 +117,8 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim2);
 	CAN_FilterConfig();
 	BASE_Init(&Robo_Base);
-//	PID_Init(&speed.Speed_PID,5,0,0,5000,0,5000,5000);
-//	PID_Init(&pos.Pos_PID,5,0,0,5000,0,5000,5000);
+	PID_Init(&speed.Speed_PID,5,0,0,5000,0,5000,5000);
+	PID_Init(&pos.Pos_PID,5,0,0,5000,0,5000,5000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -178,6 +178,11 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void Remote_to_speed(uint8_t Motor_num,uint8_t ch0,uint8_t ch1)//麦克纳姆轮各轮速度控制函数
+{
+	
+}
+
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
 {
 	Motor->Angle=RxData[0];Motor->Angle<<=8;Motor->Angle|=RxData[1];
@@ -206,18 +211,25 @@ void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
 
 }
 
-void Motor_control_process(Motor* Robo,uint8_t* RxData,uint8_t* TxData)
+void Motor_control_process(Motor* Motor,uint8_t speed,uint8_t* RxData,uint8_t* TxData)
 {
-	
+	Speed_System Tarspeed;
+	Motor_Info_Handle(Motor,RxData);
+	Tarspeed.Tar_Speed=speed;
+	PID_Speed_Cal(&Tarspeed,TxData);
+	Send_To_Motor(&hcan1,TxData);
 }
 
-void Motor_num_converter(uint8_t Motor_num,ROBO_BASE* Robo)
+void Motor_num_converter(uint8_t Motor_num,uint8_t speed,ROBO_BASE* Robo)
 {
-	if (Motor_num==1) Motor_control_process(Robo->MotorLF,Rx_CAN1,Tx_CAN1);
-	else if(Motor_num==2) Motor_control_process(Robo->MotorRF,Rx_CAN1,Tx_CAN1);
-	else if(Motor_num==3) Motor_control_process(Robo->MotorRB,Rx_CAN2,Tx_CAN1);
-	else if(Motor_num==4) Motor_control_process(Robo->MotorLB,Rx_CAN2,Tx_CAN1);
+	if (Motor_num==1) Motor_control_process(&Robo->MotorLF,speed,Rx_CAN1,Tx_CAN1);
+	else if(Motor_num==2) Motor_control_process(&Robo->MotorRF,speed,Rx_CAN1,Tx_CAN1);
+	else if(Motor_num==3) Motor_control_process(&Robo->MotorRB,speed,Rx_CAN2,Tx_CAN1);
+	else if(Motor_num==4) Motor_control_process(&Robo->MotorLB,speed,Rx_CAN2,Tx_CAN1);
 }
+
+
+
 /* USER CODE END 4 */
 
 /**
