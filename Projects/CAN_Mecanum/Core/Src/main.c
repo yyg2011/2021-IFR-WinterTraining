@@ -56,7 +56,8 @@ CAN_RxHeaderTypeDef RxMessage;
 uint8_t BUF[8]={1,2,3,4,5,6,7,8};
 uint32_t Txmailbox;
 PID pid1;
-Speed_System speed;
+float speed;
+Speed_System speedsys;
 Pos_System pos;
 RC_Ctl_t RC_Data;
 extern ROBO_BASE Robo_Base;
@@ -117,8 +118,8 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim2);
 	CAN_FilterConfig();
 	BASE_Init(&Robo_Base);
-	PID_Init(&speed.Speed_PID,5,0,0,5000,0,5000,5000);
-	PID_Init(&pos.Pos_PID,5,0,0,5000,0,5000,5000);
+	PID_Init(&speedsys.Speed_PID,5,0,0,5000,0,5000,5000);
+	//PID_Init(&pos.Pos_PID,5,0,0,5000,0,5000,5000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -180,7 +181,10 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void Remote_to_speed(uint8_t Motor_num,uint8_t ch0,uint8_t ch1)//麦克纳姆轮各轮速度控制函数
 {
-	
+	if (Motor_num==1) speed=((ch1-1024)+(ch0-1024))*5;
+	else if(Motor_num==2) speed=(-(ch1-1024)+(ch0-1024))*5;
+	else if(Motor_num==3) speed=((ch1-1024)-(ch0-1024))*5;
+	else if(Motor_num==4) speed=(-(ch1-1024)-(ch0-1024))*5;
 }
 
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
@@ -222,10 +226,10 @@ void Motor_control_process(Motor* Motor,uint8_t speed,uint8_t* RxData,uint8_t* T
 
 void Motor_num_converter(uint8_t Motor_num,uint8_t speed,ROBO_BASE* Robo)
 {
-	if (Motor_num==1) Motor_control_process(&Robo->MotorLF,speed,Rx_CAN1,Tx_CAN1);
-	else if(Motor_num==2) Motor_control_process(&Robo->MotorRF,speed,Rx_CAN1,Tx_CAN1);
-	else if(Motor_num==3) Motor_control_process(&Robo->MotorRB,speed,Rx_CAN2,Tx_CAN1);
-	else if(Motor_num==4) Motor_control_process(&Robo->MotorLB,speed,Rx_CAN2,Tx_CAN1);
+	if (Motor_num==1) Motor_control_process(&Robo->MotorLF,speed,Robo_Base.Rx_CAN1,Robo_Base.Tx_CAN1);
+	else if(Motor_num==2) Motor_control_process(&Robo->MotorRF,speed,Robo_Base.Rx_CAN1,Robo_Base.Tx_CAN1);
+	else if(Motor_num==3) Motor_control_process(&Robo->MotorRB,speed,Robo_Base.Rx_CAN2,Robo_Base.Tx_CAN1);
+	else if(Motor_num==4) Motor_control_process(&Robo->MotorLB,speed,Robo_Base.Rx_CAN2,Robo_Base.Tx_CAN1);
 }
 
 

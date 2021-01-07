@@ -33,12 +33,13 @@ can\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 can\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 can\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 can\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+can\main.o: ..\PID\robo_base.h
+can\main.o: ../Core/Inc/main.h
+can\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+can\main.o: ../Core/Inc/Remote.h
 can\main.o: ../Core/Inc/can.h
 can\main.o: ../Core/Inc/dma.h
 can\main.o: ../Core/Inc/iwdg.h
 can\main.o: ../Core/Inc/tim.h
 can\main.o: ../Core/Inc/usart.h
 can\main.o: ../Core/Inc/gpio.h
-can\main.o: ..\PID\robo_base.h
-can\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-can\main.o: ../Core/Inc/Remote.h

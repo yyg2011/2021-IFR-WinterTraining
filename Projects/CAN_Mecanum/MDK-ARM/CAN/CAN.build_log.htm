@@ -27,26 +27,11 @@ Project File Date:  01/07/2021
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'CAN'
-compiling stm32f4xx_it.c...
-../Core/Src/stm32f4xx_it.c(267): error:  #20: identifier "TxData" is undefined
-  		PID_Speed_Cal(&speed,TxData);
-../Core/Src/stm32f4xx_it.c(271): error:  #20: identifier "TxData" is undefined
-  		PID_Pos_Cal(&pos,TxData);
-../Core/Src/stm32f4xx_it.c(273): error:  #20: identifier "TxData" is undefined
-  	Send_To_Motor(&hcan1,TxData);
-../Core/Src/stm32f4xx_it.c: 0 warnings, 3 errors
 compiling main.c...
-../Core/Src/main.c(216): error:  #167: argument of type "Motor" is incompatible with parameter of type "Motor *"
-  	if (Motor_num==1) Motor_control_process(Robo->MotorLF,Rx_CAN1,Tx_CAN1);
-../Core/Src/main.c(217): error:  #167: argument of type "Motor" is incompatible with parameter of type "Motor *"
-  	else if(Motor_num==2) Motor_control_process(Robo->MotorRF,Rx_CAN1,Tx_CAN1);
-../Core/Src/main.c(218): error:  #167: argument of type "Motor" is incompatible with parameter of type "Motor *"
-  	else if(Motor_num==3) Motor_control_process(Robo->MotorRB,Rx_CAN2,Tx_CAN1);
-../Core/Src/main.c(219): error:  #167: argument of type "Motor" is incompatible with parameter of type "Motor *"
-  	else if(Motor_num==4) Motor_control_process(Robo->MotorLB,Rx_CAN2,Tx_CAN1);
-../Core/Src/main.c: 0 warnings, 4 errors
-compiling robo_base.c...
-"CAN\CAN.axf" - 7 Error(s), 0 Warning(s).
+linking...
+Program Size: Code=10940 RO-data=456 RW-data=40 ZI-data=2880  
+FromELF: creating hex file...
+"CAN\CAN.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -70,8 +55,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Target not created.
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

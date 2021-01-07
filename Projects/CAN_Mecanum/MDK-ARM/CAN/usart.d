@@ -34,3 +34,7 @@ can\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 can\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 can\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 can\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+can\usart.o: ..\PID\robo_base.h
+can\usart.o: ../Core/Inc/main.h
+can\usart.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+can\usart.o: ../Core/Inc/Remote.h

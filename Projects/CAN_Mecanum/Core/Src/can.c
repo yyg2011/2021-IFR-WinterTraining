@@ -21,14 +21,6 @@
 #include "can.h"
 
 /* USER CODE BEGIN 0 */
-typedef struct
-{
-  int16_t Angle;
-	int16_t Speed;
-	int16_t Current;
-	int8_t Temperature;
-}	Motor;
-extern Motor dianji;
 extern CAN_TxHeaderTypeDef TxMessage;
 extern CAN_RxHeaderTypeDef RxMessage;
 extern uint8_t RxData[8];

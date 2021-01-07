@@ -52,11 +52,11 @@ extern CAN_RxHeaderTypeDef RxMessage;
 //extern uint8_t TxData[8];
 extern uint8_t BUF[8];
 extern uint32_t Txmailbox;
-extern Speed_System speed;
+extern float speed;
 extern Pos_System pos;
 extern ROBO_BASE Robo_Base;
 //RC_Ctl_t RC_Data;
-
+uint8_t count=1;
 uint8_t a[18];
 int16_t speed_data_ch0;
 int16_t speed_data_ch1;
@@ -262,16 +262,12 @@ void CAN1_RX1_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
-	if(mode==1){
-		speed.Tar_Speed=(speed_data-1024)*5;
-		PID_Speed_Cal(&speed,TxData);
+	for(;count<=4;count++)
+	{
+		Remote_to_speed(count,speed_data_ch0,speed_data_ch1);
+		Motor_num_converter(count,speed,&Robo_Base);
 	}
-	else if(mode==3){
-		pos.Tar_Pos=(speed_data-1024)*5;
-		PID_Pos_Cal(&pos,TxData);
-	}
-	Send_To_Motor(&hcan1,TxData);
+	count=1;
 	HAL_IWDG_Refresh(&hiwdg);
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
