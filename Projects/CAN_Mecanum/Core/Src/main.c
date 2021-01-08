@@ -218,7 +218,6 @@ void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
 void Motor_control_process(Motor* Motor,uint8_t speed,uint8_t* RxData,uint8_t* TxData)
 {
 	Speed_System Tarspeed;
-	Motor_Info_Handle(Motor,RxData);
 	Tarspeed.Tar_Speed=speed;
 	PID_Speed_Cal(&Tarspeed,TxData);
 	Send_To_Motor(&hcan1,TxData);

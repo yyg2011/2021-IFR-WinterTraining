@@ -229,6 +229,7 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
 	if(HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO0,&RxMessage,Robo_Base.Rx_CAN1)==HAL_OK)
 	{
+		Motor_Info_Handle(&Robo_Base.MotorLF,Robo_Base.Rx_CAN1);
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
 	}
 
@@ -248,6 +249,7 @@ void CAN1_RX1_IRQHandler(void)
 	if(HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO1,&RxMessage,Robo_Base.Rx_CAN1)==HAL_OK)
 	{
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
+		Motor_Info_Handle(&Robo_Base.MotorRF,Robo_Base.Rx_CAN1);
 	}
   /* USER CODE END CAN1_RX1_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
@@ -313,6 +315,7 @@ void CAN2_RX0_IRQHandler(void)
 	if(HAL_CAN_GetRxMessage(&hcan2,CAN_RX_FIFO0,&RxMessage,Robo_Base.Rx_CAN2)==HAL_OK)
 	{
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
+		Motor_Info_Handle(&Robo_Base.MotorLB,Robo_Base.Rx_CAN2);
 	}
   /* USER CODE END CAN2_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan2);
@@ -330,6 +333,7 @@ void CAN2_RX1_IRQHandler(void)
 	if(HAL_CAN_GetRxMessage(&hcan2,CAN_RX_FIFO1,&RxMessage,Robo_Base.Rx_CAN2)==HAL_OK)
 	{
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
+		Motor_Info_Handle(&Robo_Base.MotorRB,Robo_Base.Rx_CAN2);
 	}
   /* USER CODE END CAN2_RX1_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan2);
