@@ -11,15 +11,19 @@
 
 //---------头文件引用部分---------//
 #include "robo_base.h"
+#include "main.h"
 #include "can.h"
 //--------------------------------//
 
 //---------变量声明部分-----------//
 ROBO_BASE Robo_Base;
-CAN_HandleTypeDef Can_HandleTypeDef;
+CAN_HandleTypeDef hcan2;
+float speed;
 //--------------------------------//
 
 //---------外部变量声明部分-------//
+extern uint8_t RxData[8];
+extern uint8_t TxData[8];
 //--------------------------------//
 
 /**********************************************************电机pid控制系统****************************************************************************************************/
@@ -41,21 +45,21 @@ CAN_HandleTypeDef Can_HandleTypeDef;
 //--------------------------------------------------------------------------------------------------//
 void BASE_Init(ROBO_BASE *Robo)       
 {
-  Pos_System* P_Pos=NULL;           //位置环信息和pid
-  P_Pos=&Robo->Pos_MotorLF; PID_Init(&P_Pos->Pos_PID,			0.3,	0,	0,	5000,	0,	0,	7000);
-  P_Pos->Motor_Num=0;		PID_Init(&P_Pos->Speed_PID,			5,	0,	0,	5000,	0,	0,	7000); 
-  P_Pos=&Robo->Pos_MotorRF; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-  P_Pos->Motor_Num=1;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
-  P_Pos=&Robo->Pos_MotorRB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-  P_Pos->Motor_Num=2;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
-  P_Pos=&Robo->Pos_MotorLB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-  P_Pos->Motor_Num=3;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+//  Pos_System* P_Pos=NULL;           //位置环信息和pid
+//  P_Pos=&Robo->Pos_MotorLF; PID_Init(&P_Pos->Pos_PID,			0.3,	0,	0,	5000,	0,	0,	7000);
+//  P_Pos->Motor_Num=0;		PID_Init(&P_Pos->Speed_PID,			5,	0,	0,	5000,	0,	0,	7000); 
+//  P_Pos=&Robo->Pos_MotorRF; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
+//  P_Pos->Motor_Num=1;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+//  P_Pos=&Robo->Pos_MotorRB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
+//  P_Pos->Motor_Num=2;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+//  P_Pos=&Robo->Pos_MotorLB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
+//  P_Pos->Motor_Num=3;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
 
   Speed_System* P_Speed=NULL;      //速度环信息和pid
-  P_Speed=&Robo->Speed_MotorLF; PID_Init(&P_Speed->Speed_PID,	5,	0,	0,	5000,	0,	0,	7000); P_Pos->Motor_Num=0;
-  P_Speed=&Robo->Speed_MotorRF; PID_Init(&P_Speed->Speed_PID,	0,	0,	0,	0,	0,	0,	0); P_Pos->Motor_Num=1;
-  P_Speed=&Robo->Speed_MotorRB; PID_Init(&P_Speed->Speed_PID,	0,	0,	0,	0,	0,	0,	0); P_Pos->Motor_Num=2;
-  P_Speed=&Robo->Speed_MotorLB; PID_Init(&P_Speed->Speed_PID,	0,	0,	0,	0,	0,	0,	0); P_Pos->Motor_Num=3;
+  P_Speed=&Robo->Speed_MotorLF; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=0;
+  P_Speed=&Robo->Speed_MotorRF; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=1;
+  P_Speed=&Robo->Speed_MotorRB; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=2;
+  P_Speed=&Robo->Speed_MotorLB; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=3;
 }
 
 //--------------------------------------------------------------------------------------------------//
@@ -108,18 +112,20 @@ void BASE_Init(ROBO_BASE *Robo)
 //		直接对case的数据进行修改, 有几个速度环的轮子就加几个, 然后让指针指向对应的轮子就行.
 //
 //--------------------------------------------------------------------------------------------------//
-//void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
-//{
-//  Speed_System* S_Motor=NULL;
-//  switch(Motor_Num)
-//  {
-//    case 0x201:S_Motor=&Robo->Speed_MotorLF;break;
-//    case 0x202:S_Motor=&Robo->Speed_MotorRF;break;
-//    case 0x203:S_Motor=&Robo->Speed_MotorRB;break;
-//    case 0x204:S_Motor=&Robo->Speed_MotorLB;break;
-//	default:break;
-//  }if(S_Motor!=NULL) Speed_Info_Analysis(&S_Motor->Info,RX_Data);
-//}
+void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
+{
+  Speed_System* S_Motor=NULL;
+  switch(Motor_Num)
+  {
+    case 0x201:S_Motor=&Robo->Speed_MotorLF;break;
+    case 0x202:S_Motor=&Robo->Speed_MotorRF;break;
+    case 0x203:S_Motor=&Robo->Speed_MotorRB;break;
+    case 0x204:S_Motor=&Robo->Speed_MotorLB;break;
+	default:break;
+	}
+//  if(S_Motor!=NULL) Speed_Info_Analysis(&S_Motor->Info,RX_Data);
+	Motor_Info_Handle(&S_Motor->Info,RX_Data);
+}
 
 //--------------------------------------------------------------------------------------------------//
 //4.发送结果给电机（出口）
@@ -139,12 +145,12 @@ void BASE_Init(ROBO_BASE *Robo)
 //--------------------------------------------------------------------------------------------------//
 void PID_Send(ROBO_BASE* Robo)
 {
-  Pos_System* P_Pos=NULL;
-  P_Pos=&Robo->Pos_MotorLB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-  P_Pos=&Robo->Pos_MotorRB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-  P_Pos=&Robo->Pos_MotorLF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-  P_Pos=&Robo->Pos_MotorRF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-  Send_To_Motor(&Can_HandleTypeDef,Robo->Tx_CAN2);
+//  Pos_System* P_Pos=NULL;
+//  P_Pos=&Robo->Pos_MotorLB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
+//  P_Pos=&Robo->Pos_MotorRB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
+//  P_Pos=&Robo->Pos_MotorLF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
+//  P_Pos=&Robo->Pos_MotorRF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
+//  Send_To_Motor(&hcan2,Robo->Tx_CAN2);
 
   Speed_System* P_Speed=NULL;
   P_Speed=&Robo->Speed_MotorLB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
@@ -256,27 +262,27 @@ void SystemIO_Usart_ToString(int32_t System_Out,int32_t System_In)
 //移植建议:
 //		大框架不需要改, 要改的话, 信息解析的地方根据通信协议来改就行.
 //--------------------------------------------------------------------------------------------------//
-void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data)
-{
-  //数据解析
-  Motor->Angle=(uint16_t)RX_Data[0]<<8|RX_Data[1];
-  Motor->Speed=(uint16_t)RX_Data[2]<<8|RX_Data[3];
-  Motor->Electric=(uint16_t)RX_Data[4]<<8|RX_Data[5];
-  Motor->Temperature=RX_Data[6];
+//void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data)
+//{
+//  //数据解析
+//  Motor->Angle=(uint16_t)RX_Data[0]<<8|RX_Data[1];
+//  Motor->Speed=(uint16_t)RX_Data[2]<<8|RX_Data[3];
+//  Motor->Electric=(uint16_t)RX_Data[4]<<8|RX_Data[5];
+//  Motor->Temperature=RX_Data[6];
 
-  //绝对角度计算
-  if (Motor->Speed!=0)
-  {
-    int16_t Error=Motor->Angle-Motor->Last_Angle;
-    Motor->Abs_Angle += Error;
-    if (Error < -4096)Motor->Abs_Angle += 8192;
-    else if (Error > 4096)  Motor->Abs_Angle -= 8192;
-  }Motor->Last_Angle=Motor->Angle;
+//  //绝对角度计算
+//  if (Motor->Speed!=0)
+//  {
+//    int16_t Error=Motor->Angle-Motor->Last_Angle;
+//    Motor->Abs_Angle += Error;
+//    if (Error < -4096)Motor->Abs_Angle += 8192;
+//    else if (Error > 4096)  Motor->Abs_Angle -= 8192;
+//  }Motor->Last_Angle=Motor->Angle;
 
-  //相对角度计算, 默认范围0-360
-  if(Motor->Abs_Angle>=0) Motor->Relative_Angle=(Motor->Abs_Angle%ONE_CIRCLE)*360.0/ONE_CIRCLE;
-  else Motor->Relative_Angle=360-((-Motor->Abs_Angle)%ONE_CIRCLE)*360.0/ONE_CIRCLE;
-}
+//  //相对角度计算, 默认范围0-360
+//  if(Motor->Abs_Angle>=0) Motor->Relative_Angle=(Motor->Abs_Angle%ONE_CIRCLE)*360.0/ONE_CIRCLE;
+//  else Motor->Relative_Angle=360-((-Motor->Abs_Angle)%ONE_CIRCLE)*360.0/ONE_CIRCLE;
+//}
 
 
 //--------------------------------------------------------------------------------------------------//
@@ -301,12 +307,12 @@ void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data)
 //移植建议:
 //		大框架不需要改, 要改的话, 信息解析的地方根据通信协议来改就行.
 //--------------------------------------------------------------------------------------------------//
-void Speed_Info_Analysis(Motor_Speed_Info* Motor,uint8_t* RX_Data)
-{
-  Motor->Speed=(uint16_t)RX_Data[2]<<8|RX_Data[3];
-  Motor->Electric=(uint16_t)RX_Data[4]<<8|RX_Data[5];
-  Motor->Temperature=RX_Data[6];
-}
+//void Speed_Info_Analysis(Motor_Speed_Info* Motor,uint8_t* RX_Data)
+//{
+//  Motor->Speed=(uint16_t)RX_Data[2]<<8|RX_Data[3];
+//  Motor->Electric=(uint16_t)RX_Data[4]<<8|RX_Data[5];
+//  Motor->Temperature=RX_Data[6];
+//}
 
 
 
@@ -409,65 +415,65 @@ void PID_General_Cal(PID *pid, float fdbV, float tarV,uint8_t moto_num,uint8_t *
 //		uint8_t* 发送数据的数组
 //
 //--------------------------------------------------------------------------------------------------//
-void PID_Pos_Cal(Pos_System* Pos_Motor,uint8_t *Tx_msg)       
-{
-	Pos_Motor->Pos_PID.error =  Pos_Motor->Tar_Pos - Pos_Motor->Info.Abs_Angle;
-	if(Pos_Motor->Pos_PID.error > Pos_Motor->Pos_PID.error_max)
-		Pos_Motor->Pos_PID.error = Pos_Motor->Pos_PID.error_max;
-	if(Pos_Motor->Pos_PID.error < -Pos_Motor->Pos_PID.error_max)
-		Pos_Motor->Pos_PID.error = -Pos_Motor->Pos_PID.error_max;
-	if(Pos_Motor->Pos_PID.error > 0 && Pos_Motor->Pos_PID.error < Pos_Motor->Pos_PID.dead_line)
-		Pos_Motor->Pos_PID.error = 0;
-	if(Pos_Motor->Pos_PID.error < 0 && Pos_Motor->Pos_PID.error > Pos_Motor->Pos_PID.dead_line)
-		Pos_Motor->Pos_PID.error = 0;
-	
-	Pos_Motor->Pos_PID.intergral = Pos_Motor->Pos_PID.intergral + Pos_Motor->Pos_PID.error;
-	if(Pos_Motor->Pos_PID.intergral > Pos_Motor->Pos_PID.intergral_max)
-		Pos_Motor->Pos_PID.intergral = Pos_Motor->Pos_PID.intergral_max;
-	if(Pos_Motor->Pos_PID.intergral < -Pos_Motor->Pos_PID.intergral_max)
-		Pos_Motor->Pos_PID.intergral = -Pos_Motor->Pos_PID.intergral_max;
-	
-	Pos_Motor->Pos_PID.derivative = Pos_Motor->Pos_PID.error - Pos_Motor->Pos_PID.error_last;
-	Pos_Motor->Pos_PID.error_last = Pos_Motor->Pos_PID.error;
-	
-	Pos_Motor->Pos_PID.output = Pos_Motor->Pos_PID.Kp*Pos_Motor->Pos_PID.error + Pos_Motor->Pos_PID.Ki*Pos_Motor->Pos_PID.intergral + Pos_Motor->Pos_PID.Kd*Pos_Motor->Pos_PID.derivative;
-	
-	if(Pos_Motor->Pos_PID.output > Pos_Motor->Pos_PID.output_max)
-		Pos_Motor->Pos_PID.output = Pos_Motor->Pos_PID.output_max;
-	if(Pos_Motor->Pos_PID.output < -Pos_Motor->Pos_PID.output_max)
-		Pos_Motor->Pos_PID.output = -Pos_Motor->Pos_PID.output_max;
-	
-		Pos_Motor->Speed_PID.error =  Pos_Motor->Pos_PID.output - Pos_Motor->Info.Speed;
-	if(Pos_Motor->Speed_PID.error > Pos_Motor->Speed_PID.error_max)
-		Pos_Motor->Speed_PID.error = Pos_Motor->Speed_PID.error_max;
-	if(Pos_Motor->Speed_PID.error < -Pos_Motor->Speed_PID.error_max)
-		Pos_Motor->Speed_PID.error = -Pos_Motor->Speed_PID.error_max;
-	if(Pos_Motor->Speed_PID.error > 0 && Pos_Motor->Speed_PID.error < Pos_Motor->Speed_PID.dead_line)
-		Pos_Motor->Speed_PID.error = 0;
-	if(Pos_Motor->Speed_PID.error < 0 && Pos_Motor->Speed_PID.error > Pos_Motor->Speed_PID.dead_line)
-		Pos_Motor->Speed_PID.error = 0;
-	
-	Pos_Motor->Speed_PID.intergral = Pos_Motor->Speed_PID.intergral + Pos_Motor->Speed_PID.error;
-	if(Pos_Motor->Speed_PID.intergral > Pos_Motor->Speed_PID.intergral_max)
-		Pos_Motor->Speed_PID.intergral = Pos_Motor->Speed_PID.intergral_max;
-	if(Pos_Motor->Speed_PID.intergral < -Pos_Motor->Speed_PID.intergral_max)
-		Pos_Motor->Speed_PID.intergral = -Pos_Motor->Speed_PID.intergral_max;
-	
-	Pos_Motor->Speed_PID.derivative = Pos_Motor->Speed_PID.error - Pos_Motor->Speed_PID.error_last;
-	Pos_Motor->Speed_PID.error_last = Pos_Motor->Speed_PID.error;
-	
-	Pos_Motor->Speed_PID.output = Pos_Motor->Speed_PID.Kp*Pos_Motor->Speed_PID.error + Pos_Motor->Speed_PID.Ki*Pos_Motor->Speed_PID.intergral + Pos_Motor->Speed_PID.Kd*Pos_Motor->Speed_PID.derivative;
-	
-	if(Pos_Motor->Speed_PID.output > Pos_Motor->Speed_PID.output_max)
-		Pos_Motor->Speed_PID.output = Pos_Motor->Speed_PID.output_max;
-	if(Pos_Motor->Speed_PID.output < -Pos_Motor->Speed_PID.output_max)
-		Pos_Motor->Speed_PID.output = -Pos_Motor->Speed_PID.output_max;
-	
+//void PID_Pos_Cal(Pos_System* Pos_Motor,uint8_t *Tx_msg)       
+//{
+//	Pos_Motor->Pos_PID.error =  Pos_Motor->Tar_Pos - Pos_Motor->Info.Abs_Angle;
+//	if(Pos_Motor->Pos_PID.error > Pos_Motor->Pos_PID.error_max)
+//		Pos_Motor->Pos_PID.error = Pos_Motor->Pos_PID.error_max;
+//	if(Pos_Motor->Pos_PID.error < -Pos_Motor->Pos_PID.error_max)
+//		Pos_Motor->Pos_PID.error = -Pos_Motor->Pos_PID.error_max;
+//	if(Pos_Motor->Pos_PID.error > 0 && Pos_Motor->Pos_PID.error < Pos_Motor->Pos_PID.dead_line)
+//		Pos_Motor->Pos_PID.error = 0;
+//	if(Pos_Motor->Pos_PID.error < 0 && Pos_Motor->Pos_PID.error > Pos_Motor->Pos_PID.dead_line)
+//		Pos_Motor->Pos_PID.error = 0;
+//	
+//	Pos_Motor->Pos_PID.intergral = Pos_Motor->Pos_PID.intergral + Pos_Motor->Pos_PID.error;
+//	if(Pos_Motor->Pos_PID.intergral > Pos_Motor->Pos_PID.intergral_max)
+//		Pos_Motor->Pos_PID.intergral = Pos_Motor->Pos_PID.intergral_max;
+//	if(Pos_Motor->Pos_PID.intergral < -Pos_Motor->Pos_PID.intergral_max)
+//		Pos_Motor->Pos_PID.intergral = -Pos_Motor->Pos_PID.intergral_max;
+//	
+//	Pos_Motor->Pos_PID.derivative = Pos_Motor->Pos_PID.error - Pos_Motor->Pos_PID.error_last;
+//	Pos_Motor->Pos_PID.error_last = Pos_Motor->Pos_PID.error;
+//	
+//	Pos_Motor->Pos_PID.output = Pos_Motor->Pos_PID.Kp*Pos_Motor->Pos_PID.error + Pos_Motor->Pos_PID.Ki*Pos_Motor->Pos_PID.intergral + Pos_Motor->Pos_PID.Kd*Pos_Motor->Pos_PID.derivative;
+//	
+//	if(Pos_Motor->Pos_PID.output > Pos_Motor->Pos_PID.output_max)
+//		Pos_Motor->Pos_PID.output = Pos_Motor->Pos_PID.output_max;
+//	if(Pos_Motor->Pos_PID.output < -Pos_Motor->Pos_PID.output_max)
+//		Pos_Motor->Pos_PID.output = -Pos_Motor->Pos_PID.output_max;
+//	
+//		Pos_Motor->Speed_PID.error =  Pos_Motor->Pos_PID.output - Pos_Motor->Info.Speed;
+//	if(Pos_Motor->Speed_PID.error > Pos_Motor->Speed_PID.error_max)
+//		Pos_Motor->Speed_PID.error = Pos_Motor->Speed_PID.error_max;
+//	if(Pos_Motor->Speed_PID.error < -Pos_Motor->Speed_PID.error_max)
+//		Pos_Motor->Speed_PID.error = -Pos_Motor->Speed_PID.error_max;
+//	if(Pos_Motor->Speed_PID.error > 0 && Pos_Motor->Speed_PID.error < Pos_Motor->Speed_PID.dead_line)
+//		Pos_Motor->Speed_PID.error = 0;
+//	if(Pos_Motor->Speed_PID.error < 0 && Pos_Motor->Speed_PID.error > Pos_Motor->Speed_PID.dead_line)
+//		Pos_Motor->Speed_PID.error = 0;
+//	
+//	Pos_Motor->Speed_PID.intergral = Pos_Motor->Speed_PID.intergral + Pos_Motor->Speed_PID.error;
+//	if(Pos_Motor->Speed_PID.intergral > Pos_Motor->Speed_PID.intergral_max)
+//		Pos_Motor->Speed_PID.intergral = Pos_Motor->Speed_PID.intergral_max;
+//	if(Pos_Motor->Speed_PID.intergral < -Pos_Motor->Speed_PID.intergral_max)
+//		Pos_Motor->Speed_PID.intergral = -Pos_Motor->Speed_PID.intergral_max;
+//	
+//	Pos_Motor->Speed_PID.derivative = Pos_Motor->Speed_PID.error - Pos_Motor->Speed_PID.error_last;
+//	Pos_Motor->Speed_PID.error_last = Pos_Motor->Speed_PID.error;
+//	
+//	Pos_Motor->Speed_PID.output = Pos_Motor->Speed_PID.Kp*Pos_Motor->Speed_PID.error + Pos_Motor->Speed_PID.Ki*Pos_Motor->Speed_PID.intergral + Pos_Motor->Speed_PID.Kd*Pos_Motor->Speed_PID.derivative;
+//	
+//	if(Pos_Motor->Speed_PID.output > Pos_Motor->Speed_PID.output_max)
+//		Pos_Motor->Speed_PID.output = Pos_Motor->Speed_PID.output_max;
+//	if(Pos_Motor->Speed_PID.output < -Pos_Motor->Speed_PID.output_max)
+//		Pos_Motor->Speed_PID.output = -Pos_Motor->Speed_PID.output_max;
+//	
 //	Pos_Motor->Motor_Num=2;
 
 //	
-	Tx_msg[Pos_Motor->Motor_Num*2]=((int16_t)Pos_Motor->Speed_PID.output)>>8;Tx_msg[Pos_Motor->Motor_Num*2+1]=(int16_t)Pos_Motor->Speed_PID.output;
-}
+//	Tx_msg[Pos_Motor->Motor_Num*2]=((int16_t)Pos_Motor->Speed_PID.output)>>8;Tx_msg[Pos_Motor->Motor_Num*2+1]=(int16_t)Pos_Motor->Speed_PID.output;
+//}
 
 //--------------------------------------------------------------------------------------------------//
 //函数名称:
@@ -510,7 +516,7 @@ void PID_Speed_Cal(Speed_System* Speed_Motor,uint8_t *Tx_msg)
 	if(Speed_Motor->Speed_PID.output < -Speed_Motor->Speed_PID.output_max)
 		Speed_Motor->Speed_PID.output = -Speed_Motor->Speed_PID.output_max;
 	
-//	Speed_Motor->Motor_Num=2;
+	Speed_Motor->Motor_Num=2;
 	
 	Tx_msg[Speed_Motor->Motor_Num*2] = ((int16_t)Speed_Motor->Speed_PID.output)>>8;
 	Tx_msg[Speed_Motor->Motor_Num*2+1] = (int16_t)Speed_Motor->Speed_PID.output;
@@ -554,4 +560,54 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data)
 	}
 }
 
+void Remote_to_speed(uint8_t Motor_num,uint8_t ch0,uint8_t ch1)//麦克纳姆轮各轮速度控制函数
+{
+	if (Motor_num==0) speed=((ch1-1024)+(ch0-1024))*5;
+	else if(Motor_num==1) speed=(-(ch1-1024)+(ch0-1024))*5;
+	else if(Motor_num==2) speed=((ch1-1024)-(ch0-1024))*5;
+	else if(Motor_num==3) speed=(-(ch1-1024)-(ch0-1024))*5;
+}
 
+void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
+{
+	Motor->Angle=RxData[0];Motor->Angle<<=8;Motor->Angle|=RxData[1];
+	Motor->Speed=RxData[2];Motor->Speed<<=8;Motor->Speed|=RxData[3];
+	Motor->Current=RxData[4];Motor->Current<<=8;Motor->Current|=RxData[5];
+	Motor->Temperature=RxData[6];
+  if(Motor->Speed!=0){
+		Motor->Error=Motor->Angle-Motor->Last_Angle;
+		Motor->Abs_Angle+=Motor->Error;
+		if (Motor->Error < -4096)Motor->Abs_Angle += 8192;
+    else if (Motor->Error > 4096)Motor->Abs_Angle -= 8192;
+  }Motor->Last_Angle=Motor->Angle;
+
+//	pos.Info.Angle=RxData[0];pos.Info.Angle<<=8;pos.Info.Angle|=RxData[1];//没有打包的废弃代码
+//	pos.Info.Speed=RxData[2];pos.Info.Speed<<=8;pos.Info.Speed|=RxData[3];
+//	pos.Info.Current=RxData[4];pos.Info.Current<<=8;pos.Info.Current|=RxData[5];
+//	pos.Info.Temperature=RxData[6];
+//  if(pos.Info.Speed!=0){
+//		Error=pos.Info.Angle-pos.Info.Last_Angle;
+//		pos.Info.Abs_Angle+=Error;
+//		if (Error < -4096)pos.Info.Abs_Angle += 8192;
+//    else if (Error > 4096)pos.Info.Abs_Angle -= 8192;
+//	}pos.Info.Last_Angle=pos.Info.Angle;
+//		speed.Tar_Speed=33.3;
+//		PID_Speed_Cal(&speed,TxData);
+
+}
+
+void Motor_control_process(Speed_System* Motor,uint8_t speed,uint8_t* RxData,uint8_t* TxData)//PID计算过程整合
+{
+	Motor->Tar_Speed=speed;
+	Motor_Info_Handle(&Motor->Info,RxData);
+	PID_Speed_Cal(Motor,TxData);
+//	Send_To_Motor(&hcan1,TxData);//经测试如果一个一个发会翻车
+}
+
+void Motor_num_converter(uint8_t Motor_num,uint8_t speed,ROBO_BASE* Robo,uint8_t* RxData,uint8_t* TxData)
+{
+	if (Motor_num==0) Motor_control_process(&Robo->Speed_MotorLF,speed,RxData,TxData);
+	else if(Motor_num==1) Motor_control_process(&Robo->Speed_MotorRF,speed,RxData,TxData);
+	else if(Motor_num==2) Motor_control_process(&Robo->Speed_MotorRB,speed,RxData,TxData);
+	else if(Motor_num==3) Motor_control_process(&Robo->Speed_MotorLB,speed,RxData,TxData);
+}
