@@ -102,8 +102,6 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim2);
 	CAN_FilterConfig();
 	BASE_Init(&Robo_Base);
-	//PID_Init(&speedsys.Speed_PID,5,0,0,5000,0,5000,5000);
-//	PID_Init(&pos.Pos_PID,5,0,0,5000,0,5000,5000);
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -11,7 +11,6 @@
 
 //---------头文件引用部分---------//
 #include "robo_base.h"
-#include "main.h"
 //--------------------------------//
 
 //---------变量声明部分-----------//
@@ -85,7 +84,6 @@ void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
     case 0x204:S_Motor=&Robo->Speed_MotorLB;break;
 	default:break;
 	}
-//  if(S_Motor!=NULL) Speed_Info_Analysis(&S_Motor->Info,RX_Data);
 	if(S_Motor!=NULL) Motor_Info_Handle(&S_Motor->Info,RX_Data);
 }
 
@@ -266,12 +264,12 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data)
 	}
 }
 
-void Remote_to_speed(uint8_t Motor_num,uint8_t ch0,uint8_t ch1)//麦克纳姆轮各轮速度控制函数
+void Remote_to_speed(uint8_t Motor_num)//麦克纳姆轮各轮速度控制函数
 {
-	if (Motor_num==0) speed=((ch1-1024)-(ch0-1024))*5;
-	else if(Motor_num==1) speed=(-(ch1-1024)-(ch0-1024))*5;
-	else if(Motor_num==2) speed=(-(ch1-1024)+(ch0-1024))*5;
-	else if(Motor_num==3) speed=((ch1-1024)+(ch0-1024))*5;
+	if (Motor_num==0) speed=((speed_data_ch1-1024)-(speed_data_ch0-1024))*5;
+	else if(Motor_num==1) speed=(-(speed_data_ch1-1024)-(speed_data_ch0-1024))*5;
+	else if(Motor_num==2) speed=(-(speed_data_ch1-1024)+(speed_data_ch0-1024))*5;
+	else if(Motor_num==3) speed=((speed_data_ch1-1024)+(speed_data_ch0-1024))*5;
 }
 
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
@@ -292,7 +290,7 @@ void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
 
 void Motor_control_process(Speed_System* Motor,uint8_t* TxData)//PID计算过程整合
 {
-	Remote_to_speed(Motor->Motor_Num,speed_data_ch0,speed_data_ch1);
+	Remote_to_speed(Motor->Motor_Num);
 	Motor->Tar_Speed=speed;
 	PID_Speed_Cal(Motor,TxData);
 }
