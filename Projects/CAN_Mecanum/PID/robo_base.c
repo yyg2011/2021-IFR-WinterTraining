@@ -19,11 +19,12 @@
 ROBO_BASE Robo_Base;
 CAN_HandleTypeDef hcan2;
 float speed;
+int Motor_num;
 //--------------------------------//
 
 //---------外部变量声明部分-------//
-extern uint8_t RxData[8];
-extern uint8_t TxData[8];
+extern int16_t speed_data_ch0;
+extern int16_t speed_data_ch1;
 //--------------------------------//
 
 /**********************************************************电机pid控制系统****************************************************************************************************/
@@ -45,15 +46,6 @@ extern uint8_t TxData[8];
 //--------------------------------------------------------------------------------------------------//
 void BASE_Init(ROBO_BASE *Robo)       
 {
-//  Pos_System* P_Pos=NULL;           //位置环信息和pid
-//  P_Pos=&Robo->Pos_MotorLF; PID_Init(&P_Pos->Pos_PID,			0.3,	0,	0,	5000,	0,	0,	7000);
-//  P_Pos->Motor_Num=0;		PID_Init(&P_Pos->Speed_PID,			5,	0,	0,	5000,	0,	0,	7000); 
-//  P_Pos=&Robo->Pos_MotorRF; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-//  P_Pos->Motor_Num=1;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
-//  P_Pos=&Robo->Pos_MotorRB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-//  P_Pos->Motor_Num=2;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
-//  P_Pos=&Robo->Pos_MotorLB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-//  P_Pos->Motor_Num=3;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
 
   Speed_System* P_Speed=NULL;      //速度环信息和pid
   P_Speed=&Robo->Speed_MotorLF; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=0;
@@ -62,37 +54,7 @@ void BASE_Init(ROBO_BASE *Robo)
   P_Speed=&Robo->Speed_MotorLB; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=3;
 }
 
-//--------------------------------------------------------------------------------------------------//
-//2.获取当前位置环位置与速度数据（pos入口）
-//
-//
-//函数名称:
-//		位置环电机数据分析的接口函数
-//
-//函数功能:
-//		读取Robo_Base对应的CAN口储存的数据, 根据电机号码来分辨是哪一个轮子的信息, 然后储存电机数据.
-//
-//参数类型:
-//		ROBO_BASE 指针, 底盘结构体的指针
-//		uint8_t* 电机信息的数组, 推荐使用Rx_CAN变量, 这样可以不需要自己去声明.
-//		uint32_t 电机号码
-//
-//移植建议:
-//		直接对case的数据进行修改, 有几个位置环的轮子就加几个, 然后让指针指向对应的轮子就行.
-//
-//--------------------------------------------------------------------------------------------------//
-//void Motor_Pos_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
-//{
-//  Pos_System* P_Motor=NULL;
-//  switch(Motor_Num)
-//  {
-//    case 0x201:P_Motor=&Robo->Pos_MotorLF;break;
-//    case 0x202:P_Motor=&Robo->Pos_MotorRF;break;
-//    case 0x203:P_Motor=&Robo->Pos_MotorRB;break;
-//    case 0x204:P_Motor=&Robo->Pos_MotorLB;break;
-//	default:break;
-//  }if(P_Motor!=NULL) Pos_Info_Analysis(&P_Motor->Info,RX_Data);
-//}
+
 
 //--------------------------------------------------------------------------------------------------//
 //3.获取当前速度环速度数据（speed入口）
@@ -124,195 +86,9 @@ void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
 	default:break;
 	}
 //  if(S_Motor!=NULL) Speed_Info_Analysis(&S_Motor->Info,RX_Data);
-	Motor_Info_Handle(&S_Motor->Info,RX_Data);
+	if(S_Motor!=NULL) Motor_Info_Handle(&S_Motor->Info,RX_Data);
 }
 
-//--------------------------------------------------------------------------------------------------//
-//4.发送结果给电机（出口）
-//
-//函数名称:
-//		PID发送函数
-//
-//函数功能:
-//		发送电机PID
-//
-//参数类型:
-//		ROBO_BASE* 底盘结构体指针
-//
-//移植建议:
-//		有需要啥环的控制就让指针指向这个系统, 然后调用对应的PID计算函数进行处理
-//
-//--------------------------------------------------------------------------------------------------//
-//void PID_Send(ROBO_BASE* Robo)
-//{
-//  Pos_System* P_Pos=NULL;
-//  P_Pos=&Robo->Pos_MotorLB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-//  P_Pos=&Robo->Pos_MotorRB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-//  P_Pos=&Robo->Pos_MotorLF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-//  P_Pos=&Robo->Pos_MotorRF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
-//  Send_To_Motor(&hcan2,Robo->Tx_CAN2);
-
-//  Speed_System* P_Speed=NULL;
-//  P_Speed=&Robo->Speed_MotorLB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-//  P_Speed=&Robo->Speed_MotorRB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-//  P_Speed=&Robo->Speed_MotorLF; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-//  P_Speed=&Robo->Speed_MotorRF;PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-//  Send_To_Motor(&hcan1,Robo->Tx_CAN1);
-//}
-
-//--------------------------------------------------------------------------------------------------//
-//5.发送数据给上位机
-//
-//函数名称:
-//		系统输入输出值转化为字符串函数
-//
-//函数功能:
-//		把速度环/位置环系统的输入输出值转化成字符串, 以便通过串口发送到上位机
-//
-//参数类型:
-//		int32_t 系统输出值
-//		int32_t 系统输入值
-//
-//移植建议:
-//		如果担心数据特别大, 可以把temp的数据再调大一点, 但是需要保证缓冲区的长度够长
-//--------------------------------------------------------------------------------------------------//
-//void SystemIO_Usart_ToString(int32_t System_Out,int32_t System_In)
-//{
-//  TX_BUFFER Usart_Tx;
-//  int32_t temp=1000000;
-//  uint8_t flag1=0;
-
-//  //转化系统输出值
-//  Usart_Tx.length=0;
-//  if(System_Out<0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='-',System_Out=-System_Out;
-//  else if(System_Out==0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0',temp=0;
-
-//  while(temp!=0)
-//  {
-//    if(System_Out/temp!=0)
-//    {
-//	  flag1=1;
-//	  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0'+System_Out/temp;
-//	  System_Out-=System_Out/temp*temp;
-//	  if(System_Out==0)
-//	  {
-//		temp/=10;
-//	    while(temp!=0)
-//		{
-//		  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-//		  temp/=10;
-//		}break;
-//	  }
-//    }else if(flag1) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-//	temp/=10;
-//  }Usart_Tx.Tx_buffer[Usart_Tx.length++]=' ';
-//  temp=10000;
-//  flag1=0;
-
-//  //转化系统输入值
-//  if(System_In<0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='-',System_In=-System_In;
-//  else if(System_In==0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0',temp=0;
-
-//  while(temp!=0)
-//  {
-//    if(System_In/temp!=0)
-//    {
-//	  flag1=1;
-//	  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0'+System_In/temp;
-//	  System_In-=System_In/temp*temp;
-//	  if(System_In==0)
-//	  {
-//		temp/=10;
-//	    while(temp!=0)
-//		{
-//		  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-//		  temp/=10;
-//		}break;
-//	  }
-//    }else if(flag1)  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-//	temp/=10;
-//  }
-//  Usart_Tx.Tx_buffer[Usart_Tx.length++]='\r';
-//  Usart_Tx.Tx_buffer[Usart_Tx.length]='\n';
-//}
-
-
-/*********************************************************************************************************************************************************************/
-
-
-//--------------------------------------------------------------------------------------------------//
-//函数名称:
-//		位置环电机数据分析的操作函数
-//
-//函数功能:
-//		根据数据传进来的数据进行解析, 并且计算出绝对角度和相对角度.
-//		默认通信协议内容:  	Data[0]----电机速度高8位
-//							Data[1]----电机速度低8位
-//							Data[2]----转子角度高8位
-//							Data[3]----转子角度低8位
-//							Data[4]----电流大小高8位
-//							Data[5]----电流大小低8位
-//							Data[6]----温度
-//							Data[7]----NULL
-//
-//参数类型:
-//		Motor_Pos_Info* 位置环电机信息指针
-//		uint8_t* 电机信息的数组
-//
-//移植建议:
-//		大框架不需要改, 要改的话, 信息解析的地方根据通信协议来改就行.
-//--------------------------------------------------------------------------------------------------//
-//void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data)
-//{
-//  //数据解析
-//  Motor->Angle=(uint16_t)RX_Data[0]<<8|RX_Data[1];
-//  Motor->Speed=(uint16_t)RX_Data[2]<<8|RX_Data[3];
-//  Motor->Electric=(uint16_t)RX_Data[4]<<8|RX_Data[5];
-//  Motor->Temperature=RX_Data[6];
-
-//  //绝对角度计算
-//  if (Motor->Speed!=0)
-//  {
-//    int16_t Error=Motor->Angle-Motor->Last_Angle;
-//    Motor->Abs_Angle += Error;
-//    if (Error < -4096)Motor->Abs_Angle += 8192;
-//    else if (Error > 4096)  Motor->Abs_Angle -= 8192;
-//  }Motor->Last_Angle=Motor->Angle;
-
-//  //相对角度计算, 默认范围0-360
-//  if(Motor->Abs_Angle>=0) Motor->Relative_Angle=(Motor->Abs_Angle%ONE_CIRCLE)*360.0/ONE_CIRCLE;
-//  else Motor->Relative_Angle=360-((-Motor->Abs_Angle)%ONE_CIRCLE)*360.0/ONE_CIRCLE;
-//}
-
-
-//--------------------------------------------------------------------------------------------------//
-//函数名称:
-//		速度环电机数据分析的操作函数
-//
-//函数功能:
-//		根据数据传进来的数据进行解析.
-//		默认通信协议内容:  	Data[0]----电机速度高8位
-//							Data[1]----电机速度低8位
-//							Data[2]----转子角度高8位
-//							Data[3]----转子角度低8位
-//							Data[4]----电流大小高8位
-//							Data[5]----电流大小低8位
-//							Data[6]----温度
-//							Data[7]----NULL
-//
-//参数类型:
-//		Motor_Speed_Info* 速度环电机信息指针
-//		uint8_t* 电机信息的数组
-//
-//移植建议:
-//		大框架不需要改, 要改的话, 信息解析的地方根据通信协议来改就行.
-//--------------------------------------------------------------------------------------------------//
-//void Speed_Info_Analysis(Motor_Speed_Info* Motor,uint8_t* RX_Data)
-//{
-//  Motor->Speed=(uint16_t)RX_Data[2]<<8|RX_Data[3];
-//  Motor->Electric=(uint16_t)RX_Data[4]<<8|RX_Data[5];
-//  Motor->Temperature=RX_Data[6];
-//}
 
 
 
@@ -403,77 +179,7 @@ void PID_General_Cal(PID *pid, float fdbV, float tarV,uint8_t moto_num,uint8_t *
 	Tx_msg[moto_num*2]=((int16_t)pid->output)>>8;Tx_msg[moto_num*2+1]=(int16_t)pid->output;
 }
 
-//--------------------------------------------------------------------------------------------------//
-//函数名称:
-//		位置环PID计算函数
-//
-//函数功能:
-//		进行位置环PID计算
-//
-//参数类型:
-//		Pos_System* 位置环系统指针
-//		uint8_t* 发送数据的数组
-//
-//--------------------------------------------------------------------------------------------------//
-//void PID_Pos_Cal(Pos_System* Pos_Motor,uint8_t *Tx_msg)       
-//{
-//	Pos_Motor->Pos_PID.error =  Pos_Motor->Tar_Pos - Pos_Motor->Info.Abs_Angle;
-//	if(Pos_Motor->Pos_PID.error > Pos_Motor->Pos_PID.error_max)
-//		Pos_Motor->Pos_PID.error = Pos_Motor->Pos_PID.error_max;
-//	if(Pos_Motor->Pos_PID.error < -Pos_Motor->Pos_PID.error_max)
-//		Pos_Motor->Pos_PID.error = -Pos_Motor->Pos_PID.error_max;
-//	if(Pos_Motor->Pos_PID.error > 0 && Pos_Motor->Pos_PID.error < Pos_Motor->Pos_PID.dead_line)
-//		Pos_Motor->Pos_PID.error = 0;
-//	if(Pos_Motor->Pos_PID.error < 0 && Pos_Motor->Pos_PID.error > Pos_Motor->Pos_PID.dead_line)
-//		Pos_Motor->Pos_PID.error = 0;
-//	
-//	Pos_Motor->Pos_PID.intergral = Pos_Motor->Pos_PID.intergral + Pos_Motor->Pos_PID.error;
-//	if(Pos_Motor->Pos_PID.intergral > Pos_Motor->Pos_PID.intergral_max)
-//		Pos_Motor->Pos_PID.intergral = Pos_Motor->Pos_PID.intergral_max;
-//	if(Pos_Motor->Pos_PID.intergral < -Pos_Motor->Pos_PID.intergral_max)
-//		Pos_Motor->Pos_PID.intergral = -Pos_Motor->Pos_PID.intergral_max;
-//	
-//	Pos_Motor->Pos_PID.derivative = Pos_Motor->Pos_PID.error - Pos_Motor->Pos_PID.error_last;
-//	Pos_Motor->Pos_PID.error_last = Pos_Motor->Pos_PID.error;
-//	
-//	Pos_Motor->Pos_PID.output = Pos_Motor->Pos_PID.Kp*Pos_Motor->Pos_PID.error + Pos_Motor->Pos_PID.Ki*Pos_Motor->Pos_PID.intergral + Pos_Motor->Pos_PID.Kd*Pos_Motor->Pos_PID.derivative;
-//	
-//	if(Pos_Motor->Pos_PID.output > Pos_Motor->Pos_PID.output_max)
-//		Pos_Motor->Pos_PID.output = Pos_Motor->Pos_PID.output_max;
-//	if(Pos_Motor->Pos_PID.output < -Pos_Motor->Pos_PID.output_max)
-//		Pos_Motor->Pos_PID.output = -Pos_Motor->Pos_PID.output_max;
-//	
-//		Pos_Motor->Speed_PID.error =  Pos_Motor->Pos_PID.output - Pos_Motor->Info.Speed;
-//	if(Pos_Motor->Speed_PID.error > Pos_Motor->Speed_PID.error_max)
-//		Pos_Motor->Speed_PID.error = Pos_Motor->Speed_PID.error_max;
-//	if(Pos_Motor->Speed_PID.error < -Pos_Motor->Speed_PID.error_max)
-//		Pos_Motor->Speed_PID.error = -Pos_Motor->Speed_PID.error_max;
-//	if(Pos_Motor->Speed_PID.error > 0 && Pos_Motor->Speed_PID.error < Pos_Motor->Speed_PID.dead_line)
-//		Pos_Motor->Speed_PID.error = 0;
-//	if(Pos_Motor->Speed_PID.error < 0 && Pos_Motor->Speed_PID.error > Pos_Motor->Speed_PID.dead_line)
-//		Pos_Motor->Speed_PID.error = 0;
-//	
-//	Pos_Motor->Speed_PID.intergral = Pos_Motor->Speed_PID.intergral + Pos_Motor->Speed_PID.error;
-//	if(Pos_Motor->Speed_PID.intergral > Pos_Motor->Speed_PID.intergral_max)
-//		Pos_Motor->Speed_PID.intergral = Pos_Motor->Speed_PID.intergral_max;
-//	if(Pos_Motor->Speed_PID.intergral < -Pos_Motor->Speed_PID.intergral_max)
-//		Pos_Motor->Speed_PID.intergral = -Pos_Motor->Speed_PID.intergral_max;
-//	
-//	Pos_Motor->Speed_PID.derivative = Pos_Motor->Speed_PID.error - Pos_Motor->Speed_PID.error_last;
-//	Pos_Motor->Speed_PID.error_last = Pos_Motor->Speed_PID.error;
-//	
-//	Pos_Motor->Speed_PID.output = Pos_Motor->Speed_PID.Kp*Pos_Motor->Speed_PID.error + Pos_Motor->Speed_PID.Ki*Pos_Motor->Speed_PID.intergral + Pos_Motor->Speed_PID.Kd*Pos_Motor->Speed_PID.derivative;
-//	
-//	if(Pos_Motor->Speed_PID.output > Pos_Motor->Speed_PID.output_max)
-//		Pos_Motor->Speed_PID.output = Pos_Motor->Speed_PID.output_max;
-//	if(Pos_Motor->Speed_PID.output < -Pos_Motor->Speed_PID.output_max)
-//		Pos_Motor->Speed_PID.output = -Pos_Motor->Speed_PID.output_max;
-//	
-//	Pos_Motor->Motor_Num=2;
 
-//	
-//	Tx_msg[Pos_Motor->Motor_Num*2]=((int16_t)Pos_Motor->Speed_PID.output)>>8;Tx_msg[Pos_Motor->Motor_Num*2+1]=(int16_t)Pos_Motor->Speed_PID.output;
-//}
 
 //--------------------------------------------------------------------------------------------------//
 //函数名称:
@@ -574,40 +280,27 @@ void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
 	Motor->Speed=RxData[2];Motor->Speed<<=8;Motor->Speed|=RxData[3];
 	Motor->Current=RxData[4];Motor->Current<<=8;Motor->Current|=RxData[5];
 	Motor->Temperature=RxData[6];
-  if(Motor->Speed!=0){
+  if(Motor->Speed!=0)
+	{
 		Motor->Error=Motor->Angle-Motor->Last_Angle;
 		Motor->Abs_Angle+=Motor->Error;
 		if (Motor->Error < -4096)Motor->Abs_Angle += 8192;
     else if (Motor->Error > 4096)Motor->Abs_Angle -= 8192;
-  }Motor->Last_Angle=Motor->Angle;
-
-//	pos.Info.Angle=RxData[0];pos.Info.Angle<<=8;pos.Info.Angle|=RxData[1];//没有打包的废弃代码
-//	pos.Info.Speed=RxData[2];pos.Info.Speed<<=8;pos.Info.Speed|=RxData[3];
-//	pos.Info.Current=RxData[4];pos.Info.Current<<=8;pos.Info.Current|=RxData[5];
-//	pos.Info.Temperature=RxData[6];
-//  if(pos.Info.Speed!=0){
-//		Error=pos.Info.Angle-pos.Info.Last_Angle;
-//		pos.Info.Abs_Angle+=Error;
-//		if (Error < -4096)pos.Info.Abs_Angle += 8192;
-//    else if (Error > 4096)pos.Info.Abs_Angle -= 8192;
-//	}pos.Info.Last_Angle=pos.Info.Angle;
-//		speed.Tar_Speed=33.3;
-//		PID_Speed_Cal(&speed,TxData);
-
+  }
+	Motor->Last_Angle=Motor->Angle;
 }
 
-void Motor_control_process(Speed_System* Motor,uint8_t speed,uint8_t* RxData,uint8_t* TxData)//PID计算过程整合
+void Motor_control_process(Speed_System* Motor,uint8_t speed,uint8_t* TxData)//PID计算过程整合
 {
+	Remote_to_speed(Motor->Motor_Num,speed_data_ch0,speed_data_ch1);
 	Motor->Tar_Speed=speed;
-	Motor_Info_Handle(&Motor->Info,RxData);
 	PID_Speed_Cal(Motor,TxData);
-//	Send_To_Motor(&hcan1,TxData);//经测试如果一个一个发会翻车
 }
 
-void Motor_num_converter(uint8_t Motor_num,uint8_t speed,ROBO_BASE* Robo,uint8_t* RxData,uint8_t* TxData)
+void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t speed,uint8_t* TxData)//自动跑四个轮子的PID计算
 {
-	if (Motor_num==0) Motor_control_process(&Robo->Speed_MotorLF,speed,RxData,TxData);
-	else if(Motor_num==1) Motor_control_process(&Robo->Speed_MotorRF,speed,RxData,TxData);
-	else if(Motor_num==2) Motor_control_process(&Robo->Speed_MotorRB,speed,RxData,TxData);
-	else if(Motor_num==3) Motor_control_process(&Robo->Speed_MotorLB,speed,RxData,TxData);
+	Motor_control_process(&Robo->Speed_MotorLF,speed,TxData);
+	Motor_control_process(&Robo->Speed_MotorRF,speed,TxData);
+	Motor_control_process(&Robo->Speed_MotorRB,speed,TxData);
+	Motor_control_process(&Robo->Speed_MotorLB,speed,TxData);
 }

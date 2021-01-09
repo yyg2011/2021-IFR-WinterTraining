@@ -46,7 +46,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-Motor dianji;
 extern CAN_TxHeaderTypeDef TxMessage;
 extern CAN_RxHeaderTypeDef RxMessage;
 extern uint8_t RxData[8];
@@ -247,11 +246,7 @@ void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
-  for(count=0;count<=3;count++)
-	{
-		Remote_to_speed(count,speed_data_ch0,speed_data_ch1);
-		Motor_num_converter(count,speed,&Robo_Base,RxData,TxData);
-	}
+	Motor_num_auto_converter(&Robo_Base,speed,TxData);
 	Send_To_Motor(&hcan1,TxData);
 //	if(mode==1){ //单个电机的调速代码，已废弃
 //		speed.Tar_Speed=(speed_data-1024)*5;
