@@ -12,7 +12,6 @@
 //---------头文件引用部分---------//
 #include "robo_base.h"
 #include "main.h"
-#include "can.h"
 //--------------------------------//
 
 //---------变量声明部分-----------//
@@ -25,6 +24,7 @@ int Motor_num;
 //---------外部变量声明部分-------//
 extern int16_t speed_data_ch0;
 extern int16_t speed_data_ch1;
+extern float speed;
 //--------------------------------//
 
 /**********************************************************电机pid控制系统****************************************************************************************************/
@@ -268,10 +268,10 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data)
 
 void Remote_to_speed(uint8_t Motor_num,uint8_t ch0,uint8_t ch1)//麦克纳姆轮各轮速度控制函数
 {
-	if (Motor_num==0) speed=((ch1-1024)+(ch0-1024))*5;
-	else if(Motor_num==1) speed=(-(ch1-1024)+(ch0-1024))*5;
-	else if(Motor_num==2) speed=((ch1-1024)-(ch0-1024))*5;
-	else if(Motor_num==3) speed=(-(ch1-1024)-(ch0-1024))*5;
+	if (Motor_num==0) speed=((ch1-1024)-(ch0-1024))*5;
+	else if(Motor_num==1) speed=(-(ch1-1024)-(ch0-1024))*5;
+	else if(Motor_num==2) speed=(-(ch1-1024)+(ch0-1024))*5;
+	else if(Motor_num==3) speed=((ch1-1024)+(ch0-1024))*5;
 }
 
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
@@ -290,17 +290,17 @@ void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
 	Motor->Last_Angle=Motor->Angle;
 }
 
-void Motor_control_process(Speed_System* Motor,uint8_t speed,uint8_t* TxData)//PID计算过程整合
+void Motor_control_process(Speed_System* Motor,uint8_t* TxData)//PID计算过程整合
 {
 	Remote_to_speed(Motor->Motor_Num,speed_data_ch0,speed_data_ch1);
 	Motor->Tar_Speed=speed;
 	PID_Speed_Cal(Motor,TxData);
 }
 
-void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t speed,uint8_t* TxData)//自动跑四个轮子的PID计算
+void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t* TxData)//自动跑四个轮子的PID计算
 {
-	Motor_control_process(&Robo->Speed_MotorLF,speed,TxData);
-	Motor_control_process(&Robo->Speed_MotorRF,speed,TxData);
-	Motor_control_process(&Robo->Speed_MotorRB,speed,TxData);
-	Motor_control_process(&Robo->Speed_MotorLB,speed,TxData);
+	Motor_control_process(&Robo->Speed_MotorLF,TxData);
+	Motor_control_process(&Robo->Speed_MotorRF,TxData);
+	Motor_control_process(&Robo->Speed_MotorRB,TxData);
+	Motor_control_process(&Robo->Speed_MotorLB,TxData);
 }

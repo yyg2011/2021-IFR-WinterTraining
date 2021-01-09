@@ -34,5 +34,3 @@ can\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 can\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 can\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 can\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-can\robo_base.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-can\robo_base.o: ../Core/Inc/can.h

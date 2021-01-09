@@ -40,5 +40,4 @@ can\main.o: ../Core/Inc/tim.h
 can\main.o: ../Core/Inc/usart.h
 can\main.o: ../Core/Inc/gpio.h
 can\main.o: ..\PID\robo_base.h
-can\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 can\main.o: ../Core/Inc/Remote.h

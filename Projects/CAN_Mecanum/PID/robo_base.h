@@ -3,7 +3,6 @@
 
 //---------头文件包含部分----------//
 #include "main.h"
-#include "math.h"
 //---------------------------------//
 
 //---------#define部分-------------//
@@ -86,29 +85,10 @@ typedef struct Speed_System			//速度环系统
 
 typedef struct Robo_Base			//底盘结构体
 {
-//	Pos_System Pos_MotorLF;			//位置环--左前轮
-//	Pos_System Pos_MotorLB;			//位置环--左后轮
-//	Pos_System Pos_MotorRF;			//位置环--右前轮
-//	Pos_System Pos_MotorRB;			//位置环--右后轮
-	
 	Speed_System Speed_MotorLF;		//速度环--左前轮
 	Speed_System Speed_MotorLB;		//速度环--左后轮
 	Speed_System Speed_MotorRF;		//速度环--右前轮
 	Speed_System Speed_MotorRB;		//速度环--右后轮
-
-//	Motor MotorLF;		
-//	Motor MotorLB;		
-//	Motor MotorRF;		
-//	Motor MotorRB;		
-
-//	int Speed_X;					//底盘X方向上目标速度
-//	int Speed_Y;					//底盘Y方向上目标速度
-//	float Angle;					//底盘运动的相对方向
-//	
-//	uint8_t Tx_CAN2[8];				//CAN2通信发送数据
-//	uint8_t Tx_CAN1[8];				//CAN1通信发送数据
-//	uint8_t Rx_CAN2[8];				//CAN2通信接收数据
-//	uint8_t Rx_CAN1[8];				//CAN1通信接收数据
 }ROBO_BASE;
 
 typedef struct TX_BUFFER			//上下位机通信结构体
@@ -140,8 +120,8 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data);								//CAN通信发
 //=========个人添加部分=========//
 void Remote_to_speed(uint8_t Motor_num,uint8_t ch0,uint8_t ch1);//麦克纳姆轮各轮速度控制函数
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData);//电机数据转换函数
-void Motor_control_process(Speed_System* Motor,uint8_t speed,uint8_t* TxData);//PID计算过程整合
-void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t speed,uint8_t* TxData);//电机编号转换
+void Motor_control_process(Speed_System* Motor,uint8_t* TxData);//PID计算过程整合
+void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t* TxData);//电机编号转换
 
 //---------------------------------//
 #endif

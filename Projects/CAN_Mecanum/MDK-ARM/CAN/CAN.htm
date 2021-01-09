@@ -3,7 +3,7 @@
 <title>Static Call Graph - [CAN\CAN.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image CAN\CAN.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Jan 09 15:51:06 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Jan 09 17:53:31 2021
 <BR><P>
 <H3>Maximum Stack Usage =        168 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1007,8 +1007,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN1_RX0_IRQHandler
 </UL>
 
-<P><STRONG><a name="[bc]"></a>Motor_control_process</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, robo_base.o(i.Motor_control_process))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = Motor_control_process &rArr; Remote_to_speed
+<P><STRONG><a name="[bc]"></a>Motor_control_process</STRONG> (Thumb, 44 bytes, Stack size 12 bytes, robo_base.o(i.Motor_control_process))
+<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = Motor_control_process &rArr; Remote_to_speed
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Remote_to_speed
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID_Speed_Cal
@@ -1016,8 +1016,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_num_auto_converter
 </UL>
 
-<P><STRONG><a name="[bf]"></a>Motor_num_auto_converter</STRONG> (Thumb, 52 bytes, Stack size 16 bytes, robo_base.o(i.Motor_num_auto_converter))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Motor_num_auto_converter &rArr; Motor_control_process &rArr; Remote_to_speed
+<P><STRONG><a name="[bf]"></a>Motor_num_auto_converter</STRONG> (Thumb, 44 bytes, Stack size 12 bytes, robo_base.o(i.Motor_num_auto_converter))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Motor_num_auto_converter &rArr; Motor_control_process &rArr; Remote_to_speed
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_control_process
 </UL>
@@ -1048,7 +1048,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[2f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART1_IRQHandler
 </UL>
 
-<P><STRONG><a name="[bd]"></a>Remote_to_speed</STRONG> (Thumb, 74 bytes, Stack size 8 bytes, robo_base.o(i.Remote_to_speed))
+<P><STRONG><a name="[bd]"></a>Remote_to_speed</STRONG> (Thumb, 72 bytes, Stack size 8 bytes, robo_base.o(i.Remote_to_speed))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Remote_to_speed
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_control_process
@@ -1085,7 +1085,7 @@ Global Symbols
 <P><STRONG><a name="[59]"></a>SystemInit</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, system_stm32f4xx.o(i.SystemInit))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(.text)
 </UL>
-<P><STRONG><a name="[26]"></a>TIM2_IRQHandler</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, stm32f4xx_it.o(i.TIM2_IRQHandler))
+<P><STRONG><a name="[26]"></a>TIM2_IRQHandler</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, stm32f4xx_it.o(i.TIM2_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = TIM2_IRQHandler &rArr; Send_To_Motor &rArr; HAL_CAN_AddTxMessage
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin

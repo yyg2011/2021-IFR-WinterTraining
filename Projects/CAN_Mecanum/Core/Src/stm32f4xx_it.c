@@ -29,9 +29,7 @@
 /* USER CODE BEGIN TD */
 #include "iwdg.h"
 #include "robo_base.h"
-#include "math.h"
 #include "Remote.h"
-#include "can.h"
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -241,17 +239,8 @@ void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
-	Motor_num_auto_converter(&Robo_Base,speed,TxData);
+	Motor_num_auto_converter(&Robo_Base,TxData);
 	Send_To_Motor(&hcan1,TxData);
-//	if(mode==1){ //单个电机的调速代码，已废弃
-//		speed.Tar_Speed=(speed_data-1024)*5;
-//		PID_Speed_Cal(&speed,TxData);
-//	}
-//	else if(mode==3){
-//		pos.Tar_Pos=(speed_data-1024)*5;
-//		PID_Pos_Cal(&pos,TxData);
-//	}
-//	Send_To_Motor(&hcan1,TxData);
 	HAL_IWDG_Refresh(&hiwdg);
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
