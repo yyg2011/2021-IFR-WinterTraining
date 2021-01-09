@@ -50,6 +50,7 @@ CAN_TxHeaderTypeDef TxMessage;
 CAN_RxHeaderTypeDef RxMessage;
 uint8_t RxData[8];
 uint8_t TxData[8];
+uint8_t Rx_buffer[18];
 extern float speed;
 extern ROBO_BASE Robo_Base;
 int16_t speed_data_ch0;
@@ -266,6 +267,8 @@ void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_0,GPIO_PIN_SET);
+	HAL_UART_Receive(&huart1,Rx_buffer,18,1000);
+	RemoteDataProcess(Rx_buffer); 
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
