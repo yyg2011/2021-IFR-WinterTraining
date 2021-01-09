@@ -143,8 +143,8 @@ void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
 //		有需要啥环的控制就让指针指向这个系统, 然后调用对应的PID计算函数进行处理
 //
 //--------------------------------------------------------------------------------------------------//
-void PID_Send(ROBO_BASE* Robo)
-{
+//void PID_Send(ROBO_BASE* Robo)
+//{
 //  Pos_System* P_Pos=NULL;
 //  P_Pos=&Robo->Pos_MotorLB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
 //  P_Pos=&Robo->Pos_MotorRB; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
@@ -152,13 +152,13 @@ void PID_Send(ROBO_BASE* Robo)
 //  P_Pos=&Robo->Pos_MotorRF; PID_Pos_Cal(P_Pos,Robo->Tx_CAN2);
 //  Send_To_Motor(&hcan2,Robo->Tx_CAN2);
 
-  Speed_System* P_Speed=NULL;
-  P_Speed=&Robo->Speed_MotorLB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-  P_Speed=&Robo->Speed_MotorRB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-  P_Speed=&Robo->Speed_MotorLF; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-  P_Speed=&Robo->Speed_MotorRF;PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
-  Send_To_Motor(&hcan1,Robo->Tx_CAN1);
-}
+//  Speed_System* P_Speed=NULL;
+//  P_Speed=&Robo->Speed_MotorLB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
+//  P_Speed=&Robo->Speed_MotorRB; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
+//  P_Speed=&Robo->Speed_MotorLF; PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
+//  P_Speed=&Robo->Speed_MotorRF;PID_Speed_Cal(P_Speed,Robo->Tx_CAN1);
+//  Send_To_Motor(&hcan1,Robo->Tx_CAN1);
+//}
 
 //--------------------------------------------------------------------------------------------------//
 //5.发送数据给上位机
@@ -176,65 +176,65 @@ void PID_Send(ROBO_BASE* Robo)
 //移植建议:
 //		如果担心数据特别大, 可以把temp的数据再调大一点, 但是需要保证缓冲区的长度够长
 //--------------------------------------------------------------------------------------------------//
-void SystemIO_Usart_ToString(int32_t System_Out,int32_t System_In)
-{
-  TX_BUFFER Usart_Tx;
-  int32_t temp=1000000;
-  uint8_t flag1=0;
+//void SystemIO_Usart_ToString(int32_t System_Out,int32_t System_In)
+//{
+//  TX_BUFFER Usart_Tx;
+//  int32_t temp=1000000;
+//  uint8_t flag1=0;
 
-  //转化系统输出值
-  Usart_Tx.length=0;
-  if(System_Out<0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='-',System_Out=-System_Out;
-  else if(System_Out==0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0',temp=0;
+//  //转化系统输出值
+//  Usart_Tx.length=0;
+//  if(System_Out<0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='-',System_Out=-System_Out;
+//  else if(System_Out==0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0',temp=0;
 
-  while(temp!=0)
-  {
-    if(System_Out/temp!=0)
-    {
-	  flag1=1;
-	  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0'+System_Out/temp;
-	  System_Out-=System_Out/temp*temp;
-	  if(System_Out==0)
-	  {
-		temp/=10;
-	    while(temp!=0)
-		{
-		  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-		  temp/=10;
-		}break;
-	  }
-    }else if(flag1) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-	temp/=10;
-  }Usart_Tx.Tx_buffer[Usart_Tx.length++]=' ';
-  temp=10000;
-  flag1=0;
+//  while(temp!=0)
+//  {
+//    if(System_Out/temp!=0)
+//    {
+//	  flag1=1;
+//	  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0'+System_Out/temp;
+//	  System_Out-=System_Out/temp*temp;
+//	  if(System_Out==0)
+//	  {
+//		temp/=10;
+//	    while(temp!=0)
+//		{
+//		  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
+//		  temp/=10;
+//		}break;
+//	  }
+//    }else if(flag1) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
+//	temp/=10;
+//  }Usart_Tx.Tx_buffer[Usart_Tx.length++]=' ';
+//  temp=10000;
+//  flag1=0;
 
-  //转化系统输入值
-  if(System_In<0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='-',System_In=-System_In;
-  else if(System_In==0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0',temp=0;
+//  //转化系统输入值
+//  if(System_In<0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='-',System_In=-System_In;
+//  else if(System_In==0) Usart_Tx.Tx_buffer[Usart_Tx.length++]='0',temp=0;
 
-  while(temp!=0)
-  {
-    if(System_In/temp!=0)
-    {
-	  flag1=1;
-	  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0'+System_In/temp;
-	  System_In-=System_In/temp*temp;
-	  if(System_In==0)
-	  {
-		temp/=10;
-	    while(temp!=0)
-		{
-		  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-		  temp/=10;
-		}break;
-	  }
-    }else if(flag1)  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
-	temp/=10;
-  }
-  Usart_Tx.Tx_buffer[Usart_Tx.length++]='\r';
-  Usart_Tx.Tx_buffer[Usart_Tx.length]='\n';
-}
+//  while(temp!=0)
+//  {
+//    if(System_In/temp!=0)
+//    {
+//	  flag1=1;
+//	  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0'+System_In/temp;
+//	  System_In-=System_In/temp*temp;
+//	  if(System_In==0)
+//	  {
+//		temp/=10;
+//	    while(temp!=0)
+//		{
+//		  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
+//		  temp/=10;
+//		}break;
+//	  }
+//    }else if(flag1)  Usart_Tx.Tx_buffer[Usart_Tx.length++]='0';
+//	temp/=10;
+//  }
+//  Usart_Tx.Tx_buffer[Usart_Tx.length++]='\r';
+//  Usart_Tx.Tx_buffer[Usart_Tx.length]='\n';
+//}
 
 
 /*********************************************************************************************************************************************************************/

@@ -101,14 +101,14 @@ typedef struct Robo_Base			//底盘结构体
 //	Motor MotorRF;		
 //	Motor MotorRB;		
 
-	int Speed_X;					//底盘X方向上目标速度
-	int Speed_Y;					//底盘Y方向上目标速度
-	float Angle;					//底盘运动的相对方向
-	
-	uint8_t Tx_CAN2[8];				//CAN2通信发送数据
-	uint8_t Tx_CAN1[8];				//CAN1通信发送数据
-	uint8_t Rx_CAN2[8];				//CAN2通信接收数据
-	uint8_t Rx_CAN1[8];				//CAN1通信接收数据
+//	int Speed_X;					//底盘X方向上目标速度
+//	int Speed_Y;					//底盘Y方向上目标速度
+//	float Angle;					//底盘运动的相对方向
+//	
+//	uint8_t Tx_CAN2[8];				//CAN2通信发送数据
+//	uint8_t Tx_CAN1[8];				//CAN1通信发送数据
+//	uint8_t Rx_CAN2[8];				//CAN2通信接收数据
+//	uint8_t Rx_CAN1[8];				//CAN1通信接收数据
 }ROBO_BASE;
 
 typedef struct TX_BUFFER			//上下位机通信结构体

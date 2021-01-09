@@ -53,12 +53,6 @@ CAN_TxHeaderTypeDef TxMessage;
 CAN_RxHeaderTypeDef RxMessage;
 uint8_t RxData[8];
 uint8_t TxData[8];
-uint8_t BUF[8]={1,2,3,4,5,6,7,8};
-uint32_t Txmailbox;
-PID pid1;
-Speed_System speedsys;
-//Pos_System pos;
-RC_Ctl_t RC_Data;
 extern ROBO_BASE Robo_Base;
 /* USER CODE END PV */
 
