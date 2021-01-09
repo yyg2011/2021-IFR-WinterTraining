@@ -46,18 +46,12 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern CAN_TxHeaderTypeDef TxMessage;
-extern CAN_RxHeaderTypeDef RxMessage;
-extern uint8_t RxData[8];
-extern uint8_t TxData[8];
-extern uint8_t BUF[8];
-extern uint32_t Txmailbox;
+CAN_TxHeaderTypeDef TxMessage;
+CAN_RxHeaderTypeDef RxMessage;
+uint8_t RxData[8];
+uint8_t TxData[8];
 extern float speed;
-//extern Pos_System pos;
 extern ROBO_BASE Robo_Base;
-//RC_Ctl_t RC_Data;
-uint8_t count=1;
-uint8_t a[18];
 int16_t speed_data_ch0;
 int16_t speed_data_ch1;
 //int16_t mode;

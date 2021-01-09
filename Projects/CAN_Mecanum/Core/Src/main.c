@@ -49,10 +49,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-CAN_TxHeaderTypeDef TxMessage;
-CAN_RxHeaderTypeDef RxMessage;
-uint8_t RxData[8];
-uint8_t TxData[8];
 extern ROBO_BASE Robo_Base;
 /* USER CODE END PV */
 
