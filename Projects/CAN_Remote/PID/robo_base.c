@@ -510,7 +510,7 @@ void PID_Speed_Cal(Speed_System* Speed_Motor,uint8_t *Tx_msg)
 	if(Speed_Motor->Speed_PID.output < -Speed_Motor->Speed_PID.output_max)
 		Speed_Motor->Speed_PID.output = -Speed_Motor->Speed_PID.output_max;
 	
-	Speed_Motor->Motor_Num=2;
+	Speed_Motor->Motor_Num=2;//想测试哪个电机就在这里改编号
 	
 	Tx_msg[Speed_Motor->Motor_Num*2] = ((int16_t)Speed_Motor->Speed_PID.output)>>8;
 	Tx_msg[Speed_Motor->Motor_Num*2+1] = (int16_t)Speed_Motor->Speed_PID.output;
