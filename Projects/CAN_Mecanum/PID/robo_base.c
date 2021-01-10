@@ -22,7 +22,7 @@ int Motor_num;
 //--------------------------------//
 
 //---------外部变量声明部分-------//
-RC_Ctl_t Remote;
+extern RC_Ctl_t RC_CtrlData;
 extern float speed;
 //--------------------------------//
 
@@ -263,10 +263,10 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data)
 
 void Remote_to_speed(uint8_t Motor_num)//麦克纳姆轮各轮速度控制函数
 {
-	if (Motor_num==0) speed=((Remote.rc.ch1-1024)-(Remote.rc.ch0-1024))*5;
-	else if(Motor_num==1) speed=(-(Remote.rc.ch1-1024)-(Remote.rc.ch0-1024))*5;
-	else if(Motor_num==2) speed=(-(Remote.rc.ch1-1024)+(Remote.rc.ch0-1024))*5;
-	else if(Motor_num==3) speed=((Remote.rc.ch1-1024)+(Remote.rc.ch0-1024))*5;
+	if (Motor_num==0) speed=((RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
+	else if(Motor_num==1) speed=(-(RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
+	else if(Motor_num==2) speed=(-(RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
+	else if(Motor_num==3) speed=((RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
 }
 
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
