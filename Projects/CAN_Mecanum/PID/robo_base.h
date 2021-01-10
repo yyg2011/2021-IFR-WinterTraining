@@ -102,7 +102,7 @@ typedef struct TX_BUFFER			//上下位机通信结构体
 //void Motor_Pos_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num);				//位置环电机数据分析的接口函数
 //void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data);								//位置环电机数据分析的操作函数
 
-void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num);				//速度环电机数据分析的接口函数
+void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint16_t Motor_Num);				//速度环电机数据分析的接口函数
 void Speed_Info_Analysis(Motor_Speed_Info* Motor,uint8_t* RX_Data);							//速度环电机数据分析的操作函数
 
 void SystemIO_Usart_ToString(int32_t System_Out,int32_t System_In);							//系统输入输入输出值转化成字符的函数

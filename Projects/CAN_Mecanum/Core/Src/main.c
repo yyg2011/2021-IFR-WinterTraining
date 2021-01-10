@@ -98,10 +98,10 @@ int main(void)
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 	MX_IWDG_Init();
+	BASE_Init(&Robo_Base);
 	__HAL_UART_ENABLE_IT(&huart1,UART_IT_IDLE);
 	HAL_TIM_Base_Start_IT(&htim2);
 	CAN_FilterConfig();
-	BASE_Init(&Robo_Base);
   /* USER CODE END 2 */
 
   /* Infinite loop */

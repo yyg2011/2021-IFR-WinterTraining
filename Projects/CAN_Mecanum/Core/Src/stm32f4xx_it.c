@@ -223,6 +223,7 @@ void CAN1_RX0_IRQHandler(void)
 	{
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
 	}
+	HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO0,&RxMessage,RxData);
 	Motor_Speed_Analysis(&Robo_Base,RxData,RxMessage.StdId);
 
   /* USER CODE END CAN1_RX0_IRQn 0 */

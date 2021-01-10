@@ -73,7 +73,7 @@ void BASE_Init(ROBO_BASE *Robo)
 //		直接对case的数据进行修改, 有几个速度环的轮子就加几个, 然后让指针指向对应的轮子就行.
 //
 //--------------------------------------------------------------------------------------------------//
-void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
+void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint16_t Motor_Num)
 {
   Speed_System* S_Motor=NULL;
   switch(Motor_Num)
@@ -219,8 +219,6 @@ void PID_Speed_Cal(Speed_System* Speed_Motor,uint8_t *Tx_msg)
 		Speed_Motor->Speed_PID.output = Speed_Motor->Speed_PID.output_max;
 	if(Speed_Motor->Speed_PID.output < -Speed_Motor->Speed_PID.output_max)
 		Speed_Motor->Speed_PID.output = -Speed_Motor->Speed_PID.output_max;
-	
-	Speed_Motor->Motor_Num=2;
 	
 	Tx_msg[Speed_Motor->Motor_Num*2] = ((int16_t)Speed_Motor->Speed_PID.output)>>8;
 	Tx_msg[Speed_Motor->Motor_Num*2+1] = (int16_t)Speed_Motor->Speed_PID.output;
