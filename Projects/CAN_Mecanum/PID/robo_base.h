@@ -122,7 +122,7 @@ void Remote_to_speed(uint8_t Motor_num);//麦克纳姆轮各轮速度控制函数
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData);//电机数据转换函数
 void Motor_control_process(Speed_System* Motor,uint8_t* TxData);//PID计算过程整合
 void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t* TxData);//电机编号转换
-
+void Speed_limit(float Tar_Speed);//限速函数
 //---------------------------------//
 #endif
 

@@ -51,8 +51,6 @@ uint8_t TxData[8];
 uint8_t Rx_buffer[18];
 extern float speed;
 extern ROBO_BASE Robo_Base;
-int16_t speed_data_ch0;
-int16_t speed_data_ch1;
 //int16_t mode;
 /* USER CODE END PV */
 

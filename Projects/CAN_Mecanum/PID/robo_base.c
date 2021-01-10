@@ -11,6 +11,7 @@
 
 //---------头文件引用部分---------//
 #include "robo_base.h"
+#include "Remote.h"
 //--------------------------------//
 
 //---------变量声明部分-----------//
@@ -21,8 +22,7 @@ int Motor_num;
 //--------------------------------//
 
 //---------外部变量声明部分-------//
-extern int16_t speed_data_ch0;
-extern int16_t speed_data_ch1;
+RC_Ctl_t Remote;
 extern float speed;
 //--------------------------------//
 
@@ -45,7 +45,6 @@ extern float speed;
 //--------------------------------------------------------------------------------------------------//
 void BASE_Init(ROBO_BASE *Robo)       
 {
-
   Speed_System* P_Speed=NULL;      //速度环信息和pid
   P_Speed=&Robo->Speed_MotorLF; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=0;
   P_Speed=&Robo->Speed_MotorRF; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=1;
@@ -264,10 +263,10 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data)
 
 void Remote_to_speed(uint8_t Motor_num)//麦克纳姆轮各轮速度控制函数
 {
-	if (Motor_num==0) speed=((speed_data_ch1-1024)-(speed_data_ch0-1024))*5;
-	else if(Motor_num==1) speed=(-(speed_data_ch1-1024)-(speed_data_ch0-1024))*5;
-	else if(Motor_num==2) speed=(-(speed_data_ch1-1024)+(speed_data_ch0-1024))*5;
-	else if(Motor_num==3) speed=((speed_data_ch1-1024)+(speed_data_ch0-1024))*5;
+	if (Motor_num==0) speed=((Remote.rc.ch1-1024)-(Remote.rc.ch0-1024))*5;
+	else if(Motor_num==1) speed=(-(Remote.rc.ch1-1024)-(Remote.rc.ch0-1024))*5;
+	else if(Motor_num==2) speed=(-(Remote.rc.ch1-1024)+(Remote.rc.ch0-1024))*5;
+	else if(Motor_num==3) speed=((Remote.rc.ch1-1024)+(Remote.rc.ch0-1024))*5;
 }
 
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
@@ -286,9 +285,16 @@ void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
 	Motor->Last_Angle=Motor->Angle;
 }
 
+void Speed_limit(float speed)//限速函数
+{
+	if (speed>8000) speed=8000;
+	if (speed<-8000) speed=-8000;
+}
+
 void Motor_control_process(Speed_System* Motor,uint8_t* TxData)//PID计算过程整合
 {
 	Remote_to_speed(Motor->Motor_Num);
+	Speed_limit(speed);
 	Motor->Tar_Speed=speed;
 	PID_Speed_Cal(Motor,TxData);
 }
@@ -300,3 +306,5 @@ void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t* TxData)//自动跑四个轮子的
 	Motor_control_process(&Robo->Speed_MotorRB,TxData);
 	Motor_control_process(&Robo->Speed_MotorLB,TxData);
 }
+
+
