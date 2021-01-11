@@ -263,10 +263,14 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data)
 
 void Remote_to_speed(uint8_t Motor_num)//麦克纳姆轮各轮速度控制函数
 {
-	if (Motor_num==0) speed=((RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
-	else if(Motor_num==1) speed=(-(RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
-	else if(Motor_num==2) speed=(-(RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
-	else if(Motor_num==3) speed=((RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
+	if(RC_CtrlData.rc.ch2==1024)//平移
+	{
+		if (Motor_num==0) speed=((RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
+		else if(Motor_num==1) speed=(-(RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
+		else if(Motor_num==2) speed=(-(RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
+		else if(Motor_num==3) speed=((RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
+	}
+	else speed=(RC_CtrlData.rc.ch2-1024)*5;//旋转
 }
 
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
