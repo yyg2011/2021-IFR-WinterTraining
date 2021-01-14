@@ -1,0 +1,6 @@
+[ProjectFiles]
+HeaderPath=D:\文档\GitHub\2021-IFR-WinterTraining\Projects\Simulink_Test\Simulink_Test\Drivers\CMSIS\Core\Include;D:\文档\GitHub\2021-IFR-WinterTraining\Projects\Simulink_Test\Simulink_Test\Drivers\CMSIS\DSP\Include;D:\文档\GitHub\2021-IFR-WinterTraining\Projects\Simulink_Test\Simulink_Test\Simulink_Test\Inc;D:\MATLAB\R2018b\simulink\include;D:\MATLAB\STM32\addSrc\inc;
+[Groups]
+MATLAB=D:\MATLAB\STM32\addSrc\src\getBuffPtr.c;D:\文档\GitHub\2021-IFR-WinterTraining\Projects\Simulink_Test\Simulink_Test\Simulink_Test\Src\Simulink_Test.c;
+[Others]
+Define=MEM_UNIT_BYTES;ARM_MATH_CM4;MemUnit_T:uint8_T;MATLAB_PROJECT;
