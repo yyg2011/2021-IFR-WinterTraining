@@ -1,0 +1,28 @@
+--cpu=Cortex-M4.fp.sp
+"simulink_test\startup_stm32f405xx.o"
+"simulink_test\main.o"
+"simulink_test\gpio.o"
+"simulink_test\stm32f4xx_it.o"
+"simulink_test\stm32f4xx_hal_msp.o"
+"simulink_test\stm32f4xx_hal_tim.o"
+"simulink_test\stm32f4xx_hal_tim_ex.o"
+"simulink_test\stm32f4xx_hal_rcc.o"
+"simulink_test\stm32f4xx_hal_rcc_ex.o"
+"simulink_test\stm32f4xx_hal_flash.o"
+"simulink_test\stm32f4xx_hal_flash_ex.o"
+"simulink_test\stm32f4xx_hal_flash_ramfunc.o"
+"simulink_test\stm32f4xx_hal_gpio.o"
+"simulink_test\stm32f4xx_hal_dma_ex.o"
+"simulink_test\stm32f4xx_hal_dma.o"
+"simulink_test\stm32f4xx_hal_pwr.o"
+"simulink_test\stm32f4xx_hal_pwr_ex.o"
+"simulink_test\stm32f4xx_hal_cortex.o"
+"simulink_test\stm32f4xx_hal.o"
+"simulink_test\stm32f4xx_hal_exti.o"
+"simulink_test\system_stm32f4xx.o"
+"simulink_test\getbuffptr.o"
+"simulink_test\simulink_test.o"
+--library_type=microlib --strict --scatter "Simulink_Test\Simulink_Test.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "Simulink_Test.map" -o Simulink_Test\Simulink_Test.axf
