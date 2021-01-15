@@ -1,0 +1,2 @@
+disable project generate true
+config load "D:\ÎÄµµ\GitHub\2021-IFR-WinterTraining\Projects\Simulink_CAN_Loopback\Simulink_Timer.ioc"
