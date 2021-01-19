@@ -45,6 +45,16 @@ extern float speed;
 //--------------------------------------------------------------------------------------------------//
 void BASE_Init(ROBO_BASE *Robo)       
 {
+  Pos_System* P_Pos=NULL;           //位置环信息和pid
+  P_Pos=&Robo->Pos_MotorLF; PID_Init(&P_Pos->Pos_PID,			0.3,	0,	0,	5000,	0,	0,	7000);
+  P_Pos->Motor_Num=0;		PID_Init(&P_Pos->Speed_PID,			5,	0,	0,	5000,	0,	0,	7000); 
+  P_Pos=&Robo->Pos_MotorRF; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
+  P_Pos->Motor_Num=1;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+  P_Pos=&Robo->Pos_MotorRB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
+  P_Pos->Motor_Num=2;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+  P_Pos=&Robo->Pos_MotorLB; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
+  P_Pos->Motor_Num=3;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+
   Speed_System* P_Speed=NULL;      //速度环信息和pid
   P_Speed=&Robo->Speed_MotorLF; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=0;
   P_Speed=&Robo->Speed_MotorRF; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=1;
@@ -52,7 +62,37 @@ void BASE_Init(ROBO_BASE *Robo)
   P_Speed=&Robo->Speed_MotorLB; PID_Init(&P_Speed->Speed_PID,5,0,0,5000,0,5000,5000); P_Speed->Motor_Num=3;
 }
 
+//--------------------------------------------------------------------------------------------------//
+//2.获取当前位置环位置与速度数据（pos入口）
 
+
+//函数名称:
+//		位置环电机数据分析的接口函数
+
+//函数功能:
+//		读取Robo_Base对应的CAN口储存的数据, 根据电机号码来分辨是哪一个轮子的信息, 然后储存电机数据.
+
+//参数类型:
+//		ROBO_BASE 指针, 底盘结构体的指针
+//		uint8_t* 电机信息的数组, 推荐使用Rx_CAN变量, 这样可以不需要自己去声明.
+//		uint32_t 电机号码
+
+//移植建议:
+//		直接对case的数据进行修改, 有几个位置环的轮子就加几个, 然后让指针指向对应的轮子就行.
+
+//--------------------------------------------------------------------------------------------------//
+void Motor_Pos_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
+{
+  Pos_System* P_Motor=NULL;
+  switch(Motor_Num)
+  {
+    case 0x201:P_Motor=&Robo->Pos_MotorLF;break;
+    case 0x202:P_Motor=&Robo->Pos_MotorRF;break;
+    case 0x203:P_Motor=&Robo->Pos_MotorRB;break;
+    case 0x204:P_Motor=&Robo->Pos_MotorLB;break;
+	default:break;
+  }if(P_Motor!=NULL) Motor_Info_Handle(&P_Motor->Info,RX_Data);
+}
 
 //--------------------------------------------------------------------------------------------------//
 //3.获取当前速度环速度数据（speed入口）
@@ -223,6 +263,49 @@ void PID_Speed_Cal(Speed_System* Speed_Motor,uint8_t *Tx_msg)
 	Tx_msg[Speed_Motor->Motor_Num*2+1] = (int16_t)Speed_Motor->Speed_PID.output;
 }
 
+//--------------------------------------------------------------------------------------------------//
+//函数名称:
+//		位置环电机数据分析的操作函数
+//
+//函数功能:
+//		根据数据传进来的数据进行解析, 并且计算出绝对角度和相对角度.
+//		默认通信协议内容:  	Data[0]----电机速度高8位
+//							Data[1]----电机速度低8位
+//							Data[2]----转子角度高8位
+//							Data[3]----转子角度低8位
+//							Data[4]----电流大小高8位
+//							Data[5]----电流大小低8位
+//							Data[6]----温度
+//							Data[7]----NULL
+//
+//参数类型:
+//		Motor_Pos_Info* 位置环电机信息指针
+//		uint8_t* 电机信息的数组
+//
+//移植建议:
+//		大框架不需要改, 要改的话, 信息解析的地方根据通信协议来改就行.
+//--------------------------------------------------------------------------------------------------//
+void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data)
+{
+  //数据解析
+  Motor->Angle=(uint16_t)RX_Data[0]<<8|RX_Data[1];
+  Motor->Speed=(uint16_t)RX_Data[2]<<8|RX_Data[3];
+  Motor->Electric=(uint16_t)RX_Data[4]<<8|RX_Data[5];
+  Motor->Temperature=RX_Data[6];
+
+  //绝对角度计算
+  if (Motor->Speed!=0)
+  {
+    int16_t Error=Motor->Angle-Motor->Last_Angle;
+    Motor->Abs_Angle += Error;
+    if (Error < -4096)Motor->Abs_Angle += 8192;
+    else if (Error > 4096)  Motor->Abs_Angle -= 8192;
+  }Motor->Last_Angle=Motor->Angle;
+
+  //相对角度计算, 默认范围0-360
+  if(Motor->Abs_Angle>=0) Motor->Relative_Angle=(Motor->Abs_Angle%ONE_CIRCLE)*360.0/ONE_CIRCLE;
+  else Motor->Relative_Angle=360-((-Motor->Abs_Angle)%ONE_CIRCLE)*360.0/ONE_CIRCLE;
+}
 
 
 //--------------------------------------------------------------------------------------------------//

@@ -18,7 +18,7 @@
 //---------底盘结构体部分----------//
 typedef struct Motor
 {
-  uint16_t Angle;
+    uint16_t Angle;
 	int16_t Speed;
 	int16_t Current;
 	uint8_t Temperature;
@@ -27,22 +27,22 @@ typedef struct Motor
 	int32_t Abs_Angle;
 }Motor;
 
-//typedef struct Motor_Pos_Info		//进行位置环控制的电机信息
-//{
-//  int16_t Speed;					//电机速度				单位(rad/min 转/每分钟)
-//  uint16_t Angle;					//转子机械角度
-//  int32_t Abs_Angle;				//转子绝对机械角度
-//  float Relative_Angle;				//电机相对坐标角度		单位(° 度)
-//  uint8_t Temperature;				//电机温度				单位(℃ 摄氏度)
-//  int16_t Electric;					//电流					单位(mA 毫安)
-//  uint16_t Last_Angle;				//上一次的转子绝对角度
-//}Motor_Pos_Info;
+typedef struct Motor_Pos_Info		//进行位置环控制的电机信息
+{
+    int16_t Speed;					//电机速度				单位(rad/min 转/每分钟)
+    uint16_t Angle;					//转子机械角度
+    int32_t Abs_Angle;				//转子绝对机械角度
+    float Relative_Angle;				//电机相对坐标角度		单位(° 度)
+    uint8_t Temperature;				//电机温度				单位(℃ 摄氏度)
+    int16_t Electric;					//电流					单位(mA 毫安)
+    uint16_t Last_Angle;				//上一次的转子绝对角度
+}Motor_Pos_Info;
 
 typedef struct Motor_Speed_Info		//进行速度环控制的电机信息
 {
-  int16_t Speed;					//电机速度				单位(rad/min 转/每分钟)
-  uint8_t Temperature;				//电机温度				单位(℃ 摄氏度)
-  int16_t Electric;					//电流					单位(mA 毫安)
+    int16_t Speed;					//电机速度				单位(rad/min 转/每分钟)
+    uint8_t Temperature;				//电机温度				单位(℃ 摄氏度)
+    int16_t Electric;					//电流					单位(mA 毫安)
 }Motor_Speed_Info;
 
 typedef struct pid_init_val{		//电机PID参数结构体
@@ -66,25 +66,30 @@ typedef struct pid_init_val{		//电机PID参数结构体
 	
 }PID;
 
-//typedef struct Pos_System			//位置环系统
-//{
-//  Motor Info;				//位置环电机信息
-//  PID Pos_PID;						//位置环PID参数
-//  PID Speed_PID;					//速度环PID参数
-//  float Tar_Pos;					//目标位置
-//  uint8_t Motor_Num;				//电机号码
-//}Pos_System;
+typedef struct Pos_System			//位置环系统
+{
+    Motor Info;				//位置环电机信息
+    PID Pos_PID;						//位置环PID参数
+    PID Speed_PID;					//速度环PID参数
+    float Tar_Pos;					//目标位置
+    uint8_t Motor_Num;				//电机号码
+}Pos_System;
 
 typedef struct Speed_System			//速度环系统
 {
-  Motor Info;			//速度环电机信息
-  PID Speed_PID;					//速度环PID参数
-  float Tar_Speed;					//目标速度
-  uint8_t Motor_Num;				//电机号码
+    Motor Info;			//速度环电机信息
+    PID Speed_PID;					//速度环PID参数
+    float Tar_Speed;					//目标速度
+    uint8_t Motor_Num;				//电机号码
 }Speed_System;
 
 typedef struct Robo_Base			//底盘结构体
 {
+	Pos_System Pos_MotorLF;			//位置环--左前轮
+	Pos_System Pos_MotorLB;			//位置环--左后轮
+	Pos_System Pos_MotorRF;			//位置环--右前轮
+	Pos_System Pos_MotorRB;			//位置环--右后轮
+
 	Speed_System Speed_MotorLF;		//速度环--左前轮
 	Speed_System Speed_MotorLB;		//速度环--左后轮
 	Speed_System Speed_MotorRF;		//速度环--右前轮
@@ -99,8 +104,8 @@ typedef struct TX_BUFFER			//上下位机通信结构体
 //---------------------------------//
 
 //-------------函数声明------------//
-//void Motor_Pos_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num);				//位置环电机数据分析的接口函数
-//void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data);								//位置环电机数据分析的操作函数
+void Motor_Pos_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num);				//位置环电机数据分析的接口函数
+void Pos_Info_Analysis(Motor_Pos_Info* Motor,uint8_t* RX_Data);								//位置环电机数据分析的操作函数
 
 void Motor_Speed_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint16_t Motor_Num);				//速度环电机数据分析的接口函数
 void Speed_Info_Analysis(Motor_Speed_Info* Motor,uint8_t* RX_Data);							//速度环电机数据分析的操作函数
