@@ -238,7 +238,7 @@ void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
-	Motor_num_auto_converter(&Robo_Base,TxData);
+	Motor_num_auto_converter(&Robo_Base,TxData,0);
 	Send_To_Motor(&hcan1,TxData);
 	HAL_IWDG_Refresh(&hiwdg);
   /* USER CODE END TIM2_IRQn 0 */
