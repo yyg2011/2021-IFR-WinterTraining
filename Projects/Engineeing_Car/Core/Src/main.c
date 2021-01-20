@@ -96,6 +96,7 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   MX_IWDG_Init();
+  MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
 	MX_IWDG_Init();
 	BASE_Init(&Robo_Base);
