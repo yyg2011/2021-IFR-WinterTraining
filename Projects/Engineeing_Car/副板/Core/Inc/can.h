@@ -32,7 +32,6 @@ extern "C" {
 /* USER CODE END Includes */
 
 extern CAN_HandleTypeDef hcan1;
-extern CAN_HandleTypeDef hcan2;
 
 /* USER CODE BEGIN Private defines */
 void CAN_Transmit(void);
@@ -41,7 +40,6 @@ void CAN_FilterConfig(void);
 /* USER CODE END Private defines */
 
 void MX_CAN1_Init(void);
-void MX_CAN2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 

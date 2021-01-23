@@ -338,7 +338,7 @@
               <MiscControls />
               <Define>USE_HAL_DRIVER,STM32F405xx</Define>
               <Undefine />
-              <IncludePath>../Core/Inc;   ../Drivers/STM32F4xx_HAL_Driver/Inc;   ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;   ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;   ../Drivers/CMSIS/Include;   ..\PID</IncludePath>
+              <IncludePath>../Core/Inc;    ../Drivers/STM32F4xx_HAL_Driver/Inc;    ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;    ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;    ../Drivers/CMSIS/Include;    ..\PID</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -391,11 +391,6 @@
               <FileName>robo_base.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\PID\robo_base.c</FilePath>
-            </File>
-            <File>
-              <FileName>Remote.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\Remote.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
