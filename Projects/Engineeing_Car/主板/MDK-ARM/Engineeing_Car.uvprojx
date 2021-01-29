@@ -388,11 +388,6 @@
               <FilePath>.\startup_stm32f405xx.s</FilePath>
             </File>
             <File>
-              <FileName>robo_base.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\PID\robo_base.c</FilePath>
-            </File>
-            <File>
               <FileName>Remote.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\Remote.c</FilePath>

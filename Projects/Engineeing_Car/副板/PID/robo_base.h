@@ -89,6 +89,12 @@ typedef struct Robo_Base			//底盘结构体
 	Pos_System Pos_MotorLB;			//位置环--左后轮
 	Pos_System Pos_MotorRF;			//位置环--右前轮
 	Pos_System Pos_MotorRB;			//位置环--右后轮
+	Pos_System Pos_ArmX;			//位置环--机械臂X
+	Pos_System Pos_ArmY;			//位置环--机械臂Y
+	Pos_System Pos_ArmClip;			//位置环--机械臂夹子
+	Pos_System Pos_ArmZ0;			//位置环--机械臂Z0
+	Pos_System Pos_ArmZ1;			//位置环--机械臂Z1
+	Pos_System Pos_Lead_Screw;			//位置环--丝杠
 
 	Speed_System Speed_MotorLF;		//速度环--左前轮
 	Speed_System Speed_MotorLB;		//速度环--左后轮

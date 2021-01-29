@@ -34,4 +34,3 @@ engineeing_car\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pw
 engineeing_car\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 engineeing_car\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 engineeing_car\robo_base.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-engineeing_car\robo_base.o: ../Core/Inc/Remote.h

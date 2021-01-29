@@ -11,7 +11,6 @@
 
 //---------头文件引用部分---------//
 #include "robo_base.h"
-#include "Remote.h"
 //--------------------------------//
 
 //---------变量声明部分-----------//
@@ -24,8 +23,8 @@ int pos_y;
 //--------------------------------//
 
 //---------外部变量声明部分-------//
-extern RC_Ctl_t RC_CtrlData;
 extern float speed;
+extern int speedLF,speedRF,speedRB,speedLB,Robo_mode;
 //--------------------------------//
 
 /**********************************************************电机pid控制系统****************************************************************************************************/
@@ -448,22 +447,11 @@ void Send_To_Motor(CAN_HandleTypeDef *hcan,uint8_t* Tx_Data)
 
 void Remote_to_speed(uint8_t Motor_num)//麦克纳姆轮各轮速度控制函数
 {
-	if(RC_CtrlData.rc.ch2==1024)//平移
-	{
-		if (Motor_num==0) speed=((RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
-		else if(Motor_num==1) speed=(-(RC_CtrlData.rc.ch1-1024)-(RC_CtrlData.rc.ch0-1024))*5;
-		else if(Motor_num==2) speed=(-(RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
-		else if(Motor_num==3) speed=((RC_CtrlData.rc.ch1-1024)+(RC_CtrlData.rc.ch0-1024))*5;
-	}
-	else speed=(RC_CtrlData.rc.ch2-1024)*5;//旋转
-}
 
-void Pos_to_speed(uint8_t Motor_num,int x,int y)
-{
-    if (Motor_num==0) speed=x-y;
-	else if(Motor_num==1) speed=-x-y;
-	else if(Motor_num==2) speed=-x+y;
-	else if(Motor_num==3) speed=x+y;
+	if (Motor_num==0) speed=speedLF;
+	else if(Motor_num==1) speed=speedRF;
+	else if(Motor_num==2) speed=speedRB;
+	else if(Motor_num==3) speed=speedLB;
 }
 
 void Motor_Info_Handle(Motor* Motor,uint8_t* RxData) //电机数据转换函数
@@ -498,7 +486,7 @@ void Motor_speed_control_process(Speed_System* Motor,uint8_t* TxData)//PID计算过
 
 void Motor_pos_control_process(Pos_System* Motor,uint8_t* TxData)
 {
-    Pos_to_speed(Motor->Motor_Num,pos_x,pos_y);
+    Remote_to_speed(Motor->Motor_Num);
     Motor->Tar_Pos=speed;
     PID_Pos_Cal(Motor,TxData);
 }
