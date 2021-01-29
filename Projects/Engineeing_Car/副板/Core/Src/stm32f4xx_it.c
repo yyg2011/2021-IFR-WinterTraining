@@ -65,7 +65,6 @@ extern ROBO_BASE Robo_Base;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern CAN_HandleTypeDef hcan1;
 extern TIM_HandleTypeDef htim2;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern UART_HandleTypeDef huart1;
@@ -210,26 +209,6 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
-
-/**
-  * @brief This function handles CAN1 RX0 interrupts.
-  */
-void CAN1_RX0_IRQHandler(void)
-{
-  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
-	if(HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO0,&RxMessage,RxData)==HAL_OK)
-	{
-		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
-	}
-	HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO0,&RxMessage,RxData);
-	Motor_Speed_Analysis(&Robo_Base,RxData,RxMessage.StdId);
-
-  /* USER CODE END CAN1_RX0_IRQn 0 */
-  HAL_CAN_IRQHandler(&hcan1);
-  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
-	
-  /* USER CODE END CAN1_RX0_IRQn 1 */
-}
 
 /**
   * @brief This function handles TIM2 global interrupt.

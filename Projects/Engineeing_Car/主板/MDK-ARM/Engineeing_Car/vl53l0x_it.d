@@ -1,0 +1,3 @@
+engineeing_car\vl53l0x_it.o: ..\vl53l0x\demo\vl53l0x_it.c
+engineeing_car\vl53l0x_it.o: ..\vl53l0x\demo\vl53l0x_it.h
+engineeing_car\vl53l0x_it.o: ..\vl53l0x\demo\vl53l0x.h
