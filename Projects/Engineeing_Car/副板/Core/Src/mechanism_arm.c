@@ -82,38 +82,20 @@ void Arm_Pos_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
   }if(P_Motor!=NULL) Motor_Info_Handle(&P_Motor->Info,RX_Data);
 }
 
-
-void Motor_speed_control_process(Speed_System* Motor,uint8_t* TxData)//PID计算过程整合
-{
-	Remote_to_speed(Motor->Motor_Num);
-	Speed_limit(speed);
-	Motor->Tar_Speed=speed;
-	PID_Speed_Cal(Motor,TxData);
-}
-
-void Motor_pos_control_process(Pos_System* Motor,uint8_t* TxData)
+void Arm_pos_control_process(Pos_System* Motor,uint8_t* TxData)
 {
     Remote_to_speed(Motor->Motor_Num);
     Motor->Tar_Pos=speed;
     PID_Speed_Cal(Motor,TxData);
 }
 
-void Motor_num_auto_converter(ROBO_BASE* Robo,uint8_t* TxData,int mode)//自动跑四个轮子的PID计算
+void Arm_num_auto_converter(ROBO_BASE* Robo,uint8_t* TxData)//自动跑五个电机的PID计算
 {
-    if (mode==0)
-    {
-        Motor_speed_control_process(&Robo->Speed_MotorLF,TxData);
-        Motor_speed_control_process(&Robo->Speed_MotorRF,TxData);
-        Motor_speed_control_process(&Robo->Speed_MotorRB,TxData);
-        Motor_speed_control_process(&Robo->Speed_MotorLB,TxData);
-    }
-    else if (mode==1)
-    {
-        Motor_pos_control_process(&Robo->Pos_MotorLF,TxData);
-        Motor_pos_control_process(&Robo->Pos_MotorRF,TxData);
-        Motor_pos_control_process(&Robo->Pos_MotorRB,TxData);
-        Motor_pos_control_process(&Robo->Pos_MotorLB,TxData);
-    }
+    Arm_pos_control_process(&Robo->Pos_ArmX,TxData);
+    Arm_pos_control_process(&Robo->Pos_ArmY,TxData);
+    Arm_pos_control_process(&Robo->Pos_ArmClip,TxData);
+    Arm_pos_control_process(&Robo->Pos_ArmZ0,TxData);
+    Arm_pos_control_process(&Robo->Pos_ArmZ1,TxData);
 }
 
 

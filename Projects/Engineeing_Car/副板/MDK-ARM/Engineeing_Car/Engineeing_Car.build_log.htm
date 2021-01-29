@@ -32,13 +32,16 @@ compiling stm32f4xx_it.c...
   	Send_To_Motor(&hcan1,TxData);
 ../Core/Src/stm32f4xx_it.c: 0 warnings, 1 error
 compiling mechanism_arm.c...
-..\Core\Src\mechanism_arm.c(98): error:  #167: argument of type "Pos_System *" is incompatible with parameter of type "Speed_System *"
+..\Core\Src\mechanism_arm.c(89): error:  #167: argument of type "Pos_System *" is incompatible with parameter of type "Speed_System *"
       PID_Speed_Cal(Motor,TxData);
 ..\Core\Src\mechanism_arm.c: 0 warnings, 1 error
-compiling main.c...
 compiling mechanism.c...
-compiling robo_base.c...
-"Engineeing_Car\Engineeing_Car.axf" - 2 Error(s), 0 Warning(s).
+..\Core\Src\mechanism.c(48): warning:  #223-D: function "PID_Pos_Cal" declared implicitly
+      if(num==0) PID_Pos_Cal(&Robo->Pos_Lead_Screw0,TxData);
+..\Core\Src\mechanism.c(49): warning:  #223-D: function "PID_Pos_Cal" declared implicitly
+      else if (num==1) PID_Pos_Cal(&Robo->Pos_Lead_Screw1,TxData);
+..\Core\Src\mechanism.c: 2 warnings, 0 errors
+"Engineeing_Car\Engineeing_Car.axf" - 2 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -63,7 +66,7 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
 Target not created.
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>
