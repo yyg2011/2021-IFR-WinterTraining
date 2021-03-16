@@ -75,11 +75,11 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(KEY_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = PHOTOELECTRIC_SWITCH_Pin;
+  /*Configure GPIO pins : PAPin PAPin */
+  GPIO_InitStruct.Pin = PHOTOELECTRIC_SWITCH1_Pin|PHOTOELECTRIC_SWITCH2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(PHOTOELECTRIC_SWITCH_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 

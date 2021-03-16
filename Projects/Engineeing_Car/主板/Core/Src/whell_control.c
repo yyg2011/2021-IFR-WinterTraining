@@ -1,5 +1,6 @@
 #include "main.h"
 #include "whell_control.h"
+#include "communicate.h"
 #include "Remote.h"
 
 int speedLF,speedRF,speedRB,speedLB,Robo_mode;

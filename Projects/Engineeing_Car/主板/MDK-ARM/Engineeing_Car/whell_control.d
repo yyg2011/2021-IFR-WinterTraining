@@ -34,4 +34,5 @@ engineeing_car\whell_control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ha
 engineeing_car\whell_control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 engineeing_car\whell_control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 engineeing_car\whell_control.o: ../Core/Inc/whell_control.h
+engineeing_car\whell_control.o: ../Core/Inc/communicate.h
 engineeing_car\whell_control.o: ../Core/Inc/Remote.h

@@ -21,61 +21,65 @@ Target DLL:      Segger\JL2CM3.dll V2.97.0.0
 Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
-D:\文档\GitHub\2021-IFR-WinterTraining\Projects\Engineeing_Car\主板\MDK-ARM\Engineeing_Car.uvprojx
-Project File Date:  01/29/2021
+C:\Users\yangy\OneDrive - mail.ncut.edu.cn\文档\GitHub\2021-IFR-WinterTraining\Projects\Engineeing_Car\主板\MDK-ARM\Engineeing_Car.uvprojx
+Project File Date:  03/16/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Engineeing_Car'
-compiling vl53l0x_api.c...
-..\vl53l0x\core\vl53l0x_device.h(37): error:  #5: cannot open source input file "vl53l0x_types.h": No such file or directory
-  #include "vl53l0x_types.h"
-..\vl53l0x\core\vl53l0x_api.c: 0 warnings, 1 error
-compiling vl53l0x.c...
-..\vl53l0x\demo\vl53l0x.h(4): error:  #5: cannot open source input file "vl53l0x_api.h": No such file or directory
-  #include "vl53l0x_api.h"
-..\vl53l0x\demo\vl53l0x.c: 0 warnings, 1 error
-compiling vl53l0x_api_calibration.c...
-..\vl53l0x\core\vl53l0x_device.h(37): error:  #5: cannot open source input file "vl53l0x_types.h": No such file or directory
-  #include "vl53l0x_types.h"
-..\vl53l0x\core\vl53l0x_api_calibration.c: 0 warnings, 1 error
-compiling vl53l0x_gen.c...
-..\vl53l0x\demo\vl53l0x.h(4): error:  #5: cannot open source input file "vl53l0x_api.h": No such file or directory
-  #include "vl53l0x_api.h"
-..\vl53l0x\demo\vl53l0x_gen.c: 0 warnings, 1 error
-compiling vl53l0x_cali.c...
-..\vl53l0x\demo\vl53l0x.h(4): error:  #5: cannot open source input file "vl53l0x_api.h": No such file or directory
-  #include "vl53l0x_api.h"
-..\vl53l0x\demo\vl53l0x_cali.c: 0 warnings, 1 error
-compiling vl53l0x_api_strings.c...
-..\vl53l0x\core\vl53l0x_device.h(37): error:  #5: cannot open source input file "vl53l0x_types.h": No such file or directory
-  #include "vl53l0x_types.h"
-..\vl53l0x\core\vl53l0x_api_strings.c: 0 warnings, 1 error
-compiling vl53l0x_api_ranging.c...
-..\vl53l0x\core\vl53l0x_device.h(37): error:  #5: cannot open source input file "vl53l0x_types.h": No such file or directory
-  #include "vl53l0x_types.h"
-..\vl53l0x\core\vl53l0x_api_ranging.c: 0 warnings, 1 error
-compiling vl53l0x_api_core.c...
-..\vl53l0x\core\vl53l0x_device.h(37): error:  #5: cannot open source input file "vl53l0x_types.h": No such file or directory
-  #include "vl53l0x_types.h"
-..\vl53l0x\core\vl53l0x_api_core.c: 0 warnings, 1 error
-compiling vl53l0x_i2c.c...
-..\vl53l0x\platform\vl53l0x_i2c.h(4): error:  #5: cannot open source input file "sys.h": No such file or directory
-  #include "sys.h"
-..\vl53l0x\platform\vl53l0x_i2c.c: 0 warnings, 1 error
-compiling vl53l0x_it.c...
-..\vl53l0x\demo\vl53l0x.h(4): error:  #5: cannot open source input file "vl53l0x_api.h": No such file or directory
-  #include "vl53l0x_api.h"
-..\vl53l0x\demo\vl53l0x_it.c: 0 warnings, 1 error
-compiling vl53l0x_platform.c...
-..\vl53l0x\platform\vl53l0x_platform.h(4): error:  #5: cannot open source input file "vl53l0x_def.h": No such file or directory
-  #include "vl53l0x_def.h"
-..\vl53l0x\platform\vl53l0x_platform.c: 0 warnings, 1 error
-compiling whell_control.c...
-..\Core\Src\whell_control.c(34): warning:  #1-D: last line of file ends without a newline
+compiling photoelectric_sensor.c...
+../Core/Inc/photoelectric_sensor.h(2): warning:  #1295-D: Deprecated declaration photoelectric_switch - give arg types
+  void photoelectric_switch();
+../Core/Inc/photoelectric_sensor.h(3): warning:  #1295-D: Deprecated declaration gy53_rceive - give arg types
+  void gy53_rceive();
+../Core/Inc/photoelectric_sensor.h(4): warning:  #1-D: last line of file ends without a newline
+  uint8_t directed_check();
+../Core/Inc/photoelectric_sensor.h(4): warning:  #1295-D: Deprecated declaration directed_check - give arg types
+  uint8_t directed_check();
+../Core/Inc/gy53_iic.h(15): error:  #20: identifier "u8" is undefined
+  void IIC_Send_Byte(u8 txd);			
+../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
+  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
+../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
+  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
+../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
+  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
+../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
+  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
+../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
+  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
+../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
+  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
+..\Core\Src\photoelectric_sensor.c(34): warning:  #1-D: last line of file ends without a newline
   }
-..\Core\Src\whell_control.c: 1 warning, 0 errors
-"Engineeing_Car\Engineeing_Car.axf" - 11 Error(s), 1 Warning(s).
+..\Core\Src\photoelectric_sensor.c: 5 warnings, 7 errors
+compiling communicate.c...
+../Core/Inc/communicate.h(3): warning:  #1-D: last line of file ends without a newline
+  void Usart_Init(void);
+..\Core\Src\communicate.c(11): error:  #20: identifier "UART_RX_BUFFER" is undefined
+  UART_RX_BUFFER Uart1_Rx;
+..\Core\Src\communicate.c(15): warning:  #223-D: function "malloc" declared implicitly
+  	Uart1_Rx.Buffer[0]=(uint8_t*)malloc(sizeof(uint8_t)*USART1_RX_LEN_MAX);//USART1_RX_LEN_MAX==18
+..\Core\Src\communicate.c(17): error:  #20: identifier "huart1" is undefined
+  	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+..\Core\Src\communicate.c: 2 warnings, 2 errors
+compiling gy53_iic.c...
+../Core/Inc/gy53_iic.h(15): error:  #20: identifier "u8" is undefined
+  void IIC_Send_Byte(u8 txd);			
+../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
+  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
+../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
+  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
+../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
+  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
+../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
+  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
+../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
+  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
+../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
+  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
+..\Core\Src\gy53_iic.c: 0 warnings, 7 errors
+"Engineeing_Car\Engineeing_Car.axf" - 16 Error(s), 7 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -100,7 +104,7 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
 Target not created.
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

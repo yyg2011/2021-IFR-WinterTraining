@@ -34,3 +34,5 @@ engineeing_car\photoelectric_sensor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32
 engineeing_car\photoelectric_sensor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 engineeing_car\photoelectric_sensor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 engineeing_car\photoelectric_sensor.o: ../Core/Inc/photoelectric_sensor.h
+engineeing_car\photoelectric_sensor.o: ../Core/Inc/gy53_iic.h
+engineeing_car\photoelectric_sensor.o: ../Core/Inc/gpio.h
