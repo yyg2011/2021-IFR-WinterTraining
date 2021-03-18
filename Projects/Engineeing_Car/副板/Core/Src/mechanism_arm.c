@@ -17,6 +17,18 @@ extern float speed;
 extern int speedLF,speedRF,speedRB,speedLB,Robo_mode;
 //--------------------------------//
 
+void arm_cylinder(int mode)//气缸
+{
+    if(mode==0)
+    {
+        HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_SET);
+    }
+    else if(mode==1)
+    {
+        HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_RESET);
+    }
+}
+
 /**********************************************************电机pid控制系统****************************************************************************************************/
 //--------------------------------------------------------------------------------------------------//
 //1.初始化底盘
@@ -37,16 +49,12 @@ extern int speedLF,speedRF,speedRB,speedLB,Robo_mode;
 void ARM_BASE_Init(ROBO_BASE *Robo)       
 {
   Pos_System* P_Pos=NULL;           //位置环信息和pid
-  P_Pos=&Robo->Pos_ArmX; PID_Init(&P_Pos->Pos_PID,			0.3,	0,	0,	5000,	0,	0,	7000);
-  P_Pos->Motor_Num=4;		PID_Init(&P_Pos->Speed_PID,			5,	0,	0,	5000,	0,	0,	7000); 
-  P_Pos=&Robo->Pos_ArmY; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-  P_Pos->Motor_Num=5;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
   P_Pos=&Robo->Pos_ArmClip; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-  P_Pos->Motor_Num=6;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+  P_Pos->Motor_Num=5;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
   P_Pos=&Robo->Pos_ArmZ0; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-  P_Pos->Motor_Num=7;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+  P_Pos->Motor_Num=6;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
   P_Pos=&Robo->Pos_ArmZ1; PID_Init(&P_Pos->Pos_PID,			0,	0,	0,	0,	0,	0,	0);
-  P_Pos->Motor_Num=8;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
+  P_Pos->Motor_Num=7;		PID_Init(&P_Pos->Speed_PID,			0,	0,	0,	0,	0,	0,	0); 
 }
 
 //--------------------------------------------------------------------------------------------------//
@@ -73,11 +81,9 @@ void Arm_Pos_Analysis(ROBO_BASE* Robo,uint8_t* RX_Data,uint32_t Motor_Num)
   Pos_System* P_Motor=NULL;
   switch(Motor_Num)
   {
-    case 0x204:P_Motor=&Robo->Pos_ArmX;break;
-    case 0x205:P_Motor=&Robo->Pos_ArmY;break;
-    case 0x206:P_Motor=&Robo->Pos_ArmClip;break;
-    case 0x207:P_Motor=&Robo->Pos_ArmZ0;break;
-    case 0x208:P_Motor=&Robo->Pos_ArmZ1;break;
+    case 0x205:P_Motor=&Robo->Pos_ArmClip;break;
+    case 0x206:P_Motor=&Robo->Pos_ArmZ0;break;
+    case 0x207:P_Motor=&Robo->Pos_ArmZ1;break;
 	default:break;
   }if(P_Motor!=NULL) Motor_Info_Handle(&P_Motor->Info,RX_Data);
 }

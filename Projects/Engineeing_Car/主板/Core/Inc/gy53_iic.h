@@ -18,8 +18,8 @@ uint8_t IIC_Wait_Ack(void);
 void IIC_Ack(void);					
 void IIC_NAck(void);				
 
-void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
+void IIC1_Write_One_Byte(uint8_t daddr,uint8_t addr,uint8_t data);
+uint8_t IIC1_Read_One_Byte(uint8_t daddr,uint8_t addr);	  
 
 
 

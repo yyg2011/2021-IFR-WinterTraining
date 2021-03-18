@@ -22,11 +22,12 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 C:\Users\yangy\OneDrive - mail.ncut.edu.cn\文档\GitHub\2021-IFR-WinterTraining\Projects\Engineeing_Car\主板\MDK-ARM\Engineeing_Car.uvprojx
-Project File Date:  03/16/2021
+Project File Date:  03/17/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
-Build target 'Engineeing_Car'
+Rebuild target 'Engineeing_Car'
+assembling startup_stm32f405xx.s...
 compiling photoelectric_sensor.c...
 ../Core/Inc/photoelectric_sensor.h(2): warning:  #1295-D: Deprecated declaration photoelectric_switch - give arg types
   void photoelectric_switch();
@@ -38,21 +39,9 @@ compiling photoelectric_sensor.c...
   uint8_t directed_check();
 ../Core/Inc/gy53_iic.h(15): error:  #20: identifier "u8" is undefined
   void IIC_Send_Byte(u8 txd);			
-../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
-  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
-  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
-  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
-  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
-../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
-  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
-../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
-  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
 ..\Core\Src\photoelectric_sensor.c(34): warning:  #1-D: last line of file ends without a newline
   }
-..\Core\Src\photoelectric_sensor.c: 5 warnings, 7 errors
+..\Core\Src\photoelectric_sensor.c: 5 warnings, 1 error
 compiling communicate.c...
 ../Core/Inc/communicate.h(3): warning:  #1-D: last line of file ends without a newline
   void Usart_Init(void);
@@ -63,23 +52,101 @@ compiling communicate.c...
 ..\Core\Src\communicate.c(17): error:  #20: identifier "huart1" is undefined
   	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 ..\Core\Src\communicate.c: 2 warnings, 2 errors
+compiling main.c...
 compiling gy53_iic.c...
 ../Core/Inc/gy53_iic.h(15): error:  #20: identifier "u8" is undefined
   void IIC_Send_Byte(u8 txd);			
-../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
-  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
-  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-../Core/Inc/gy53_iic.h(21): error:  #20: identifier "u8" is undefined
-  void IIC1_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
-  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
-../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
-  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
-../Core/Inc/gy53_iic.h(22): error:  #20: identifier "u8" is undefined
-  u8 IIC1_Read_One_Byte(u8 daddr,u8 addr);	  
-..\Core\Src\gy53_iic.c: 0 warnings, 7 errors
-"Engineeing_Car\Engineeing_Car.axf" - 16 Error(s), 7 Warning(s).
+..\Core\Src\gy53_iic.c: 0 warnings, 1 error
+compiling whell_control.c...
+../Core/Inc/communicate.h(3): warning:  #1-D: last line of file ends without a newline
+  void Usart_Init(void);
+..\Core\Src\whell_control.c: 1 warning, 0 errors
+compiling Remote.c...
+compiling mechanism_control.c...
+compiling gpio.c...
+compiling can.c...
+compiling iwdg.c...
+compiling dma.c...
+compiling tim.c...
+compiling usart.c...
+compiling time_counter.c...
+../Core/Inc/time_counter.h(1): warning:  #1295-D: Deprecated declaration ResetTimer - give arg types
+  void ResetTimer();
+../Core/Inc/time_counter.h(2): warning:  #1295-D: Deprecated declaration StartTimer - give arg types
+  void StartTimer();
+../Core/Inc/time_counter.h(3): warning:  #1-D: last line of file ends without a newline
+  void CheckTimer();
+../Core/Inc/time_counter.h(3): warning:  #1295-D: Deprecated declaration CheckTimer - give arg types
+  void CheckTimer();
+..\Core\Src\time_counter.c(20): warning:  #1-D: last line of file ends without a newline
+  }
+..\Core\Src\time_counter.c: 5 warnings, 0 errors
+compiling stm32f4xx_hal_msp.c...
+compiling stm32f4xx_it.c...
+compiling control.c...
+../Core/Inc/control.h(13): error:  #67: expected a "}"
+      Wait_State          //10.等待矿石下落
+../Core/Inc/control.h(14): warning:  #1-D: last line of file ends without a newline
+  }Work_State;
+../Core/Inc/time_counter.h(1): warning:  #1295-D: Deprecated declaration ResetTimer - give arg types
+  void ResetTimer();
+../Core/Inc/time_counter.h(2): warning:  #1295-D: Deprecated declaration StartTimer - give arg types
+  void StartTimer();
+../Core/Inc/time_counter.h(3): warning:  #1-D: last line of file ends without a newline
+  void CheckTimer();
+../Core/Inc/time_counter.h(3): warning:  #1295-D: Deprecated declaration CheckTimer - give arg types
+  void CheckTimer();
+../Core/Inc/lost_count.h(25): warning:  #1-D: last line of file ends without a newline
+  }
+../Core/Inc/lost_count.h(18): error:  #169: expected a declaration
+  {\
+../Core/Inc/communicate.h(3): warning:  #1-D: last line of file ends without a newline
+  void Usart_Init(void);
+../Core/Inc/photoelectric_sensor.h(2): warning:  #1295-D: Deprecated declaration photoelectric_switch - give arg types
+  void photoelectric_switch();
+../Core/Inc/photoelectric_sensor.h(3): warning:  #1295-D: Deprecated declaration gy53_rceive - give arg types
+  void gy53_rceive();
+../Core/Inc/photoelectric_sensor.h(4): warning:  #1-D: last line of file ends without a newline
+  uint8_t directed_check();
+../Core/Inc/photoelectric_sensor.h(4): warning:  #1295-D: Deprecated declaration directed_check - give arg types
+  uint8_t directed_check();
+../Core/Inc/gy53_iic.h(15): error:  #20: identifier "u8" is undefined
+  void IIC_Send_Byte(u8 txd);			
+..\Core\Src\control.c(50): error:  #20: identifier "Wait_State" is undefined
+      if(state==Wait_State)
+..\Core\Src\control.c: 11 warnings, 4 errors
+compiling stm32f4xx_hal_can.c...
+compiling lost_count.c...
+../Core/Inc/control.h(13): error:  #67: expected a "}"
+      Wait_State          //10.等待矿石下落
+../Core/Inc/control.h(14): warning:  #1-D: last line of file ends without a newline
+  }Work_State;
+../Core/Inc/lost_count.h(25): warning:  #1-D: last line of file ends without a newline
+  }
+../Core/Inc/lost_count.h(18): error:  #169: expected a declaration
+  {\
+..\Core\Src\lost_count.c(22): error:  #42: operand types are incompatible ("uint16_t *" and "int")
+      if(count>lost_threshold_value*cycle)
+..\Core\Src\lost_count.c: 2 warnings, 3 errors
+compiling stm32f4xx_hal_flash.c...
+compiling stm32f4xx_hal_rcc.c...
+compiling stm32f4xx_hal_rcc_ex.c...
+compiling stm32f4xx_hal_flash_ramfunc.c...
+compiling stm32f4xx_hal_flash_ex.c...
+compiling stm32f4xx_hal_pwr.c...
+compiling stm32f4xx_hal.c...
+compiling stm32f4xx_hal_gpio.c...
+compiling stm32f4xx_hal_cortex.c...
+compiling stm32f4xx_hal_dma_ex.c...
+compiling stm32f4xx_hal_dma.c...
+compiling stm32f4xx_hal_pwr_ex.c...
+compiling stm32f4xx_hal_exti.c...
+compiling stm32f4xx_hal_iwdg.c...
+compiling stm32f4xx_hal_uart.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_hal_tim_ex.c...
+compiling stm32f4xx_hal_tim.c...
+"Engineeing_Car\Engineeing_Car.axf" - 11 Error(s), 26 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -104,7 +171,7 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
 Target not created.
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:48
 </pre>
 </body>
 </html>
