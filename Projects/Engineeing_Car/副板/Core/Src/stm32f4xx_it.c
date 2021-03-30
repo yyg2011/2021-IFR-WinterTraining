@@ -28,6 +28,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
 #include "iwdg.h"
+#include "can.h"
 #include "robo_base.h"
 #include "Remote.h"
 /* USER CODE END TD */
